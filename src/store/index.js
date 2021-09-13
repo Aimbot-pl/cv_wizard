@@ -87,9 +87,6 @@ const store = createStore({
                     ...JSON.parse(sessionStorage.getItem('user'))
                 }
                 state.userExists = true
-            } else {
-                console.log('user doesn\'t exists!')
-                state.message = 'user doesn\'t exists!'
             }
         },
         updateApp(state, user) {

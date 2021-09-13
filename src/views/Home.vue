@@ -741,7 +741,6 @@ export default {
 				this.currentFormTab = this.navigation[id].component;
 				this.currentFormTabIndex = this.navigation[id].id;
 				let appRoot = document.querySelector("#hidden_links");
-				console.log(appRoot);
 				setTimeout(() => {
 					window.scrollTo(0, 0);
 					appRoot.focus();

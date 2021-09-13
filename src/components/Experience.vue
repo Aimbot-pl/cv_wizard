@@ -954,7 +954,6 @@ export default {
 
 	mounted() {
 		let educationModal = document.querySelector('#educationModal');
-		console.log(educationModal);
 		educationModal.addEventListener('shown.bs.modal', () => {
 			let inputs = document.getElementsByTagName('select');
 			inputs[0].focus();
