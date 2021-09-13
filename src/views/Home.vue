@@ -585,13 +585,13 @@ export default {
 	},
 
 	mounted() {
-		if (document.querySelector('#cv_page')) {
-			document.querySelector("#cv_page").style.maxHeight = (document.querySelector('#paper').clientHeight - document.querySelector("#cv_options").clientHeight)+"px";
-			document.querySelector("#cv_page").style.overflow = "hidden";
-		}
+
 
 		window.addEventListener("scroll", () => {
 			if (this.clientWidth >= 3) {
+				document.querySelector("#cv_page").style.maxHeight = (document.querySelector('#paper').clientHeight - document.querySelector("#cv_options").clientHeight)+"px";
+				document.querySelector("#cv_page").style.overflow = "hidden";
+
 				let cvPage = document.querySelector("#cv_page");
 				let cvOptions = document.querySelector("#cv_options");
 				let viewport = document.getElementsByTagName("html")[0];
