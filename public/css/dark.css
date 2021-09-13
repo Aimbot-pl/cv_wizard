@@ -12,6 +12,23 @@ body {
   background-color: var(--bg-dark) !important;
 }
 
+.header-navigation-button {
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+}
+
+.header-navigation-button:hover, .header-navigation-button:focus {
+  background-color: rgba(var(--bg-dark), 0.7) !important;
+  border-radius: 10%/50%;
+}
+
+.header-navigation-button:active {
+  background-color: rgba(var(--bg-dark), 1) !important;
+  border-radius: 30%/70%;
+  -webkit-transition: all .15s ease-out;
+  transition: all .15s ease-out;
+}
+
 input {
   background-color: var(--bg-light) !important;
   color: var(--color) !important;
@@ -35,12 +52,6 @@ select {
   background-color: var(--bg-light) !important;
 }
 
-#paper .list-inline-item-name,
-#cv_options .list-inline-item-name {
-  color: var(--bs-gray-dark) !important;
-  font-weight: 700;
-}
-
 #paper h1,
 #paper h2,
 #paper p,
@@ -55,6 +66,16 @@ select {
 #paper .horizontal-list,
 #cv_options .horizontal-list {
   background-color: var(--bs-secondary) !important;
+}
+
+#paper .list-inline-item-name,
+#cv_options .list-inline-item-name {
+  color: var(--bs-gray-400) !important;
+}
+
+#paper .list-inline-item-value,
+#cv_options .list-inline-item-value {
+  color: var(--bs-gray-200) !important;
 }
 
 #paper .card,

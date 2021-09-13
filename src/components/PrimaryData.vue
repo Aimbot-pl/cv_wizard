@@ -215,8 +215,8 @@
                 :key="contact.contactForm"
                 :class="list_inline"
             >
-                <span class="list-inline-item-name">{{ contact.contactForm }}:</span> 
-                {{ contact.contactValue }}
+                <span class="list-inline-item-name">{{ contact.contactForm }}: </span> 
+                <span class="list-inline-item-value">{{ contact.contactValue }}</span>
                 <button
                     @click="removeItem(contact, localData.contact, 'contact')"
                     :class="list_inline_button"

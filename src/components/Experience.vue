@@ -9,7 +9,7 @@
 			<div v-if="localData.education">
 				<div v-for="edu in localData.education" :key="edu.id">
 					<div
-						class="card p-2 bg-gray text-small text-secondary mb-3"
+						class="card p-2 bg-gray text-small mb-3"
 					>
 						<div class="d-flex justify-content-end">
 							<button
@@ -43,21 +43,21 @@
 								title="Usuń pozycję"
 							></button>
 						</div>
-						<p v-if="edu.dateStart" class="m-0">
-							Okres: {{ edu.dateStart }} -
-							<span v-if="edu.dateEnd">
+						<p v-if="edu.dateStart" class="m-0 list-inline-item-name">
+							Okres: <span class="list-inline-item-value">{{ edu.dateStart }} -</span>
+							<span v-if="edu.dateEnd" class="list-inline-item-value">
 								{{ edu.dateEnd }}
 							</span>
-							<span v-else>obecnie</span>
+							<span v-else class="list-inline-item-value">obecnie </span>
 						</p>
-						<p v-if="edu.schoolName" class="m-0">
-							Nazwa szkoły: {{ edu.schoolName }}
+						<p v-if="edu.schoolName" class="m-0 list-inline-item-name">
+							Nazwa szkoły: <span class="list-inline-item-value">{{ edu.schoolName }} </span>
 						</p>
-						<p v-if="edu.specialization" class="m-0">
-							Specjalizacja: {{ edu.specialization }}
+						<p v-if="edu.specialization" class="m-0 list-inline-item-name">
+							Specjalizacja: <span class="list-inline-item-value">{{ edu.specialization }} </span>
 						</p>
-						<p v-if="edu.educationLevel" class="m-0">
-							Poziom: {{ edu.educationLevel }}
+						<p v-if="edu.educationLevel" class="m-0 list-inline-item-name">
+							Poziom: <span class="list-inline-item-value">{{ edu.educationLevel }} </span>
 						</p>
 					</div>
 				</div>
@@ -828,8 +828,8 @@
 				:key="lang.language"
 				:class="list_inline"
 			>
-				<span class="list-inline-item-name">{{ lang.language }}:</span>
-				{{ lang.languageLevel }}
+				<span class="list-inline-item-name">{{ lang.language }}: </span>
+				<span class="list-inline-item-value">{{ lang.languageLevel }}</span>
 				<button
 					@click="removeItem(lang, localData.languages, 'languages')"
 					:class="list_inline_button"

@@ -12,6 +12,21 @@ body {
     background-color: var(--bg-dark) !important;
 }
 
+.header-navigation-button {
+    transition: all .5s ease;
+
+    &:hover, &:focus {
+        background-color: rgba(var(--bg-dark), .7) !important;
+        border-radius: 10%/50%;
+    }
+
+	&:active {
+        background-color: rgba(var(--bg-dark), 1) !important;
+		border-radius: 30%/70%;
+		transition: all .15s ease-out;
+	}
+}
+
 input {
     background-color: var(--bg-light) !important;
     color: var(--color) !important;
@@ -34,11 +49,6 @@ select {
 #cv_options {
     background-color: var(--bg-light) !important;
 
-    .list-inline-item-name {
-        color: var(--bs-gray-dark) !important;
-        font-weight: 700;
-    }
-
     h1,
     h2,
     p,
@@ -48,6 +58,13 @@ select {
 
     .horizontal-list {
         background-color: var(--bs-secondary) !important;
+    }
+    
+    .list-inline-item-name {
+        color: var(--bs-gray-400) !important;
+    }
+    .list-inline-item-value {
+        color: var(--bs-gray-200) !important;
     }
 
     .card {

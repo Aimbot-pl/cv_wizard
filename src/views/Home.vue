@@ -1,55 +1,45 @@
 <template>
 	<transition name="fade" mode="out-in">
-		<div v-if="showCreator">
-
-            <!-- Hidden links -->
+		<div v-if="showWizard">
+			<!-- Hidden links -->
 			<ul class="hidden-links">
 				<li>
-					<a id="hidden_nav" href="#creator">Przejdź do kreatora</a>
+					<a id="hidden_nav" href="#wizard">Przejdź do kreatora</a>
 				</li>
 				<li><a href="#preview">Przejdź do podglądu</a></li>
 			</ul>
+
 			<header>
 				<h1
 					id="header_banner"
-					class="bg-primary text-white text-center text-md-left p-4 d-inline-block w-100"
+					class="
+						bg-primary
+						text-white text-center text-md-left
+						p-4
+						d-inline-block
+						w-100
+					"
 				>
 					Kreator CV
 				</h1>
-				<button 
-					@click="setThemeMode" 
-					class="btn rounded-circle bi position-absolute text-light" 
+				<button
+					@click="setThemeMode"
+					class="btn rounded-circle bi position-absolute text-light shadow"
 					:class="[theme === 'light' ? 'bi-sun' : 'bi-moon']"
-					style="top: 20px; right:20px; font-size: 1.5rem;"
+					style="top: 20px; right: 20px; font-size: 1.5rem"
+					data-bs-toggle="tooltip"
+					data-bs-placement="bottom"
+					:title="themeTitle"
 				></button>
 			</header>
 
-            <!-- Header navigation section -->
+			<!-- Header navigation section -->
 			<div v-if="clientWidth >= 3">
 				<!-- Header navigation block -->
 				<div
 					id="header_navigation"
-					class="d-flex position-relative justify-content-evenly my-3"
+					class="d-flex position-relative justify-content-evenly my-3 mx-5"
 				>
-					<!-- Progress bar -->
-					<div
-						class="progress position-absolute w-100 bg-transparent"
-						style="z-index: -1; top: 20px"
-					>
-						<div
-							class="progress-bar bg-warning"
-							role="progressbar"
-							:style="{
-								width: 25 + 25 * currentFormTabIndex + '%',
-							}"
-							:aria-valuenow="25 + 25 * currentFormTabIndex"
-							:aira-label="`CV wypełnione w ${
-								25 + 25 * currentFormTabIndex
-							}%`"
-							aria-valuemin="0"
-							aria-valuemax="100"
-						></div>
-					</div>
 					<!-- Header navigation -->
 					<button
 						v-for="nav in navigation"
@@ -61,6 +51,7 @@
 							bg-transparent
 							border-0
 							header-navigation-button
+							py-3
 						"
 					>
 						<span
@@ -110,15 +101,10 @@
 			</div>
 
 			<!-- Main application -->
-			<div id="creator" class="d-flex justify-content-evenly my-4">
+			<div id="wizard" class="d-flex justify-content-evenly my-4">
 				<!-- Main section of application -->
 				<div
-					class="
-						col-11 col-md-6
-						bg-light
-						p-2 p-md-3
-						control-panels
-					"
+					class="col-11 col-md-6 bg-light p-2 p-md-3 control-panels"
 					id="paper"
 				>
 					<component :is="formTabComponent"></component>
@@ -334,11 +320,15 @@
 			</div>
 
 			<!-- Footer -->
-			<footer id="footer" class="py-4 py-md-5 mt-5 text-center text-light">
+			<footer
+				id="footer"
+				class="py-4 py-md-5 mt-5 text-center text-light"
+			>
 				<span class="d-block"
-					>CV generator &copy; 2021 Wszelkie prawa zastrzeżone</span>
-                <a href="#app" class="d-block text-decoration-none text-light"
-                >Powrót na górę</a
+					>CV generator &copy; 2021 Wszelkie prawa zastrzeżone</span
+				>
+				<a href="#app" class="d-block text-decoration-none text-light"
+					>Powrót na górę</a
 				>
 			</footer>
 
@@ -390,7 +380,7 @@
 				></button>
 			</div>
 
-            <!-- TODO fix button to add distance of footer at end of page  -->
+			<!-- TODO fix button to add distance of footer at end of page  -->
 			<!-- Rounded preview button -->
 			<button
 				v-if="clientWidth < 3"
@@ -501,7 +491,7 @@
 				</p>
 				<p class="lead">
 					<button
-						@click="toggleCreator"
+						@click="toggleWizard"
 						class="
 							btn-forward btn btn-lg btn-secondary
 							fw-bold
@@ -520,7 +510,6 @@
 </template>
 
 <script>
-
 import { mapActions, mapGetters } from "vuex";
 import PrimaryData from "../components/PrimaryData.vue";
 import Experience from "../components/Experience.vue";
@@ -535,6 +524,7 @@ export default {
 	data() {
 		return {
 			theme: null,
+			themeTitle: null,
 			link: null,
 			fix: false,
 			currentMobilePreviewTab: null,
@@ -579,39 +569,42 @@ export default {
 
 	created() {
 		this.createUser();
-		this.doShowCreator(this.showCreator);
+		this.doShowWizard(this.showWizard);
 		this.colors = this.storeColors;
 		this.activeColor = this.storeActiveColor;
 		this.getViewportWidth();
 		window.addEventListener("resize", this.getViewportWidth);
-		this.theme = localStorage.getItem('theme') || 'light';
-		let link = document.createElement('link');
-        link.rel = 'stylesheet'; 
-        link.type = 'text/css';
-        link.href = '../../../public/css/dark.css'; 
+		this.theme = localStorage.getItem("theme") || "light";
+		let link = document.createElement("link");
+		link.rel = "stylesheet";
+		link.type = "text/css";
+		link.href = "../../../public/css/dark.css";
 		link.id = "dark_mode";
-		this.link = link
+		this.link = link;
 		this.setThemeMode();
 	},
 
 	mounted() {
-		window.addEventListener("scroll", () => {
-			
-			if (this.clientWidth >= 3) {
+		if (document.querySelector('#cv_page')) {
+			document.querySelector("#cv_page").style.maxHeight = (document.querySelector('#paper').clientHeight - document.querySelector("#cv_options").clientHeight)+"px";
+			document.querySelector("#cv_page").style.overflow = "hidden";
+		}
 
-                let cvPage = document.querySelector("#cv_page");
-                let cvOptions = document.querySelector("#cv_options");
-                let viewport = document.getElementsByTagName("html")[0];
-                let previewTip = document.querySelector("#preview");
-                let headerHeight =
-                    document.querySelector("#header_banner").clientHeight +
-                    document.querySelector("#header_navigation").clientHeight;
-                if (
-                    headerHeight + cvPage.clientHeight + cvPage.clientHeight >
-                    window.innerHeight
-                ) {
-                    this.fix = true;
-                }
+		window.addEventListener("scroll", () => {
+			if (this.clientWidth >= 3) {
+				let cvPage = document.querySelector("#cv_page");
+				let cvOptions = document.querySelector("#cv_options");
+				let viewport = document.getElementsByTagName("html")[0];
+				let previewTip = document.querySelector("#preview");
+				let headerHeight =
+					document.querySelector("#header_banner").clientHeight +
+					document.querySelector("#header_navigation").clientHeight;
+				if (
+					headerHeight + cvPage.clientHeight + cvPage.clientHeight >
+					window.innerHeight
+				) {
+					this.fix = true;
+				}
 				this.previewMenu.width =
 					document.querySelector("#cv_page").clientWidth;
 
@@ -632,6 +625,7 @@ export default {
 					);
 				} else {
 					this.fix = true;
+					cvPage.style.maxHeight = document.querySelector('#paper').clientHeight+"px !important";
 					let x = () =>
 						headerHeight - window.scrollY <= 0
 							? 0
@@ -652,8 +646,8 @@ export default {
 	},
 
 	watch: {
-		showCreator(val) {
-			this.doShowCreator(val);
+		showWizard(val) {
+			this.doShowWizard(val);
 		},
 		currentFormTabIndex(val) {
 			if (val === this.navigation.at(this.navigation.length - 1).id) {
@@ -674,7 +668,7 @@ export default {
 			clientWidth: "clientWidth",
 			canGoForward: "canGoForward",
 		}),
-		showCreator() {
+		showWizard() {
 			return this.userExists ? true : false;
 		},
 		formTabComponent() {
@@ -695,18 +689,18 @@ export default {
 			setClickedGoForward: "doSetClickedGoForward",
 		}),
 
-		toggleCreator() {
+		toggleWizard() {
 			this.setUserExists(true);
 			this.createUser();
 		},
 
-		doShowCreator(val) {
-				if (!val) {
-					document.body.classList.value =
-						"d-flex h-100 text-center text-white bg-dark";
-				} else {
-					document.body.classList.value = "bg-gray";
-				}
+		doShowWizard(val) {
+			if (!val) {
+				document.body.classList.value =
+					"d-flex h-100 text-center text-white bg-dark";
+			} else {
+				document.body.classList.value = "bg-gray";
+			}
 		},
 
 		getViewportWidth() {
@@ -746,7 +740,7 @@ export default {
 			if (letGo) {
 				this.currentFormTab = this.navigation[id].component;
 				this.currentFormTabIndex = this.navigation[id].id;
-				let appRoot = document.querySelector("#app_root");
+				let appRoot = document.querySelector("#hidden_links");
 				console.log(appRoot);
 				setTimeout(() => {
 					window.scrollTo(0, 0);
@@ -788,23 +782,25 @@ export default {
 		},
 
 		setThemeMode() {
-			if (this.theme === 'dark') {
-				document.getElementById('dark_mode').disabled = false
-				this.theme = 'light';
-				localStorage.setItem('theme', 'dark');
+			if (this.theme === "dark") {
+				document.getElementById("dark_mode").disabled = false;
+				this.theme = "light";
+				this.themeTitle = "Tryb jasny";
+				localStorage.setItem("theme", "dark");
 			} else {
 				document.getElementById(this.link.id).disabled = true;
-				this.theme = 'dark';
-				localStorage.setItem('theme', 'light');
+				this.theme = "dark";
+				this.themeTitle = "Tryb ciemny";
+				localStorage.setItem("theme", "light");
 			}
-		}
+		},
 	},
 };
 </script>
 
 <style lang="scss">
 html {
-    height: 100% !important;
+	height: 100% !important;
 }
 
 html,
@@ -814,12 +810,26 @@ body {
 	min-width: 284px;
 }
 
+.header-navigation-button {
+		transition: all .5s ease;
+
+	&:hover, &:focus {
+		background-color: rgb(183, 191, 199) !important;
+		border-radius: 10%/50%;
+	}
+	&:active {
+		background-color: rgb(193, 201, 209) !important;
+		border-radius: 30%/70%;
+		transition: all .15s ease-out;
+	}
+}
+
 #footer {
-    background-color: var(--bs-gray-800);
+	background-color: var(--bs-gray-800);
 }
 
 .bg-gray {
-    background-color: var(--bs-gray-500);
+	background-color: var(--bs-gray-500);
 }
 
 .hidden-links {
@@ -881,8 +891,13 @@ body {
 }
 
 .list-inline-item-name {
-	color: var(--bs-gray-dark) !important;
+	color: var(--bs-dark) !important;
 	font-weight: 700;
+}
+
+.list-inline-item-value {
+	color: var(--bs-gray-800) !important;
+	font-weight: 400;
 }
 
 #preview-tip {
@@ -1047,7 +1062,7 @@ textarea {
 }
 
 .cv-fullview {
-	width: 900px !important; 
+	width: 900px !important;
 }
 
 @media screen and (max-width: 991px) {
@@ -1064,9 +1079,9 @@ textarea {
 		}
 	}
 
-    #footer {
-        margin-bottom: 74px;
-    }
+	#footer {
+		margin-bottom: 74px;
+	}
 }
 
 @media screen and (min-width: 992px) {

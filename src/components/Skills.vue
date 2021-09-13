@@ -13,7 +13,7 @@
                 v-model="formData.skill"
                 :class="[form_text, { 'is-invalid': errors.skills }]"
             />
-            <span v-if="errors.skills" class="invalid-feedback d-block">
+            <span v-if="errors.skills" class="invalid-feedback d-block list-inline-item-value">
                 {{ errors.skills }}
             </span>
         </div>
@@ -66,7 +66,7 @@
                     :key="int"
                     :class="list_inline"
                 >
-                    {{ int }}
+                    <span class="list-inline-item-value">{{ int }}</span>
                     <button
                         @click="
                             removeItem(int, localData.interested, 'interested')
@@ -136,7 +136,7 @@
                     :key="project.projectTitle"
                     :class="list_inline"
                 >
-                    {{ project.projectTitle }}
+                    <span class="list-inline-item-value">{{ project.projectTitle }}</span>
                     <button
                         @click="
                             removeItem(project, localData.projects, 'projects')
