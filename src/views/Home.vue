@@ -2,9 +2,10 @@
 	<transition name="fade" mode="out-in">
 		<div v-if="showWizard">
 			<!-- Hidden links -->
-			<ul class="hidden-links">
+			<ul class="hidden-links" id="hidden_links">
+			<button id="hidden_nav" type="button"></button>
 				<li>
-					<a id="hidden_nav" href="#wizard">Przejdź do kreatora</a>
+					<a href="#wizard">Przejdź do kreatora</a>
 				</li>
 				<li><a href="#preview">Przejdź do podglądu</a></li>
 			</ul>
@@ -137,7 +138,7 @@
 						</button>
 						<a
 							v-if="notLastPage"
-							href="#app"
+							href="#hidden_nav"
 							@click="changeFormTab(currentFormTabIndex + 1)"
 							class="btn btn-primary px-5 py-2 rounded-pill"
 							>Dalej</a
@@ -327,7 +328,7 @@
 				<span class="d-block"
 					>CV generator &copy; 2021 Wszelkie prawa zastrzeżone</span
 				>
-				<a href="#app" class="d-block text-decoration-none text-light"
+				<a href="#hidden_nav" class="d-block text-decoration-none text-light"
 					>Powrót na górę</a
 				>
 			</footer>
@@ -740,7 +741,7 @@ export default {
 			if (letGo) {
 				this.currentFormTab = this.navigation[id].component;
 				this.currentFormTabIndex = this.navigation[id].id;
-				let appRoot = document.querySelector("#hidden_links");
+				let appRoot = document.querySelector("#hidden_nav");
 				setTimeout(() => {
 					window.scrollTo(0, 0);
 					appRoot.focus();
