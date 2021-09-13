@@ -5,7 +5,7 @@
 			<ul class="hidden-links" id="hidden_links">
 			<button id="hidden_nav" type="button"></button>
 				<li>
-					<a href="#wizard">Przejdź do kreatora</a>
+					<a  href="#wizard">Przejdź do kreatora</a>
 				</li>
 				<li><a href="#preview">Przejdź do podglądu</a></li>
 			</ul>
