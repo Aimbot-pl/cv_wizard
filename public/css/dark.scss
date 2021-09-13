@@ -1,0 +1,122 @@
+.btn {
+    font-weight: 600 !important;
+}
+
+:root {
+    --bg-light: var(--bs-gray-800);
+    --bg-dark: rgb(23, 25, 35);
+    --color: white;
+}
+
+body {
+    background-color: var(--bg-dark) !important;
+}
+
+input {
+    background-color: var(--bg-light) !important;
+    color: var(--color) !important;
+}
+
+select {
+    background-color: var(--bg-light) !important;
+    color: var(--color) !important;
+}
+
+.invalid-feedback {
+    font-weight: 600 !important;
+}
+
+#preview {
+    background-color: var(--bg-light) !important;
+}
+
+#paper,
+#cv_options {
+    background-color: var(--bg-light) !important;
+
+    .list-inline-item-name {
+        color: var(--bs-gray-dark) !important;
+        font-weight: 700;
+    }
+
+    h1,
+    h2,
+    p,
+    label {
+        color: var(--color) !important;
+    }
+
+    .horizontal-list {
+        background-color: var(--bs-secondary) !important;
+    }
+
+    .card {
+        background-color: var(--bs-secondary) !important;
+
+        .btn {
+            color: var(--bs-gray-500) !important;
+        }
+
+        .btn:hover {
+            color: var(--color) !important;
+        }
+
+        .btn:focus {
+            // border-color: var(--bs-ligth) !important;
+            // outline: var(--bs-light) !important;
+            color: var(--color) !important;
+            box-shadow: 0 0 0 0.25rem var(--bs-gray-400);
+        }
+
+        .btn:active {
+            background-color: var(--bs-light) !important;
+            color: var(--bs-secondary) !important;
+        }
+    }
+
+    .modal-content {
+        background-color: var(--bg-light) !important;
+        color: var(--color) !important;
+
+        .bi {
+            color: var(--color) !important;
+        }
+
+        .date-picker {
+            background-color: var(--bg-light) !important;
+            color: var(--color) !important;
+        }
+
+        .btn-close {
+            background-color: var(--color) !important;
+        }
+    }
+
+    textarea {
+        background-color: var(--bs-secondary) !important;
+        color: var(--color) !important;
+    }
+}
+
+.modal-content {
+    background-color: var(--bg-light) !important;
+
+    .modal-footer {
+        color: var(--color) !important;
+
+        ul > li > button {
+            color: white !important;
+        }
+
+        .bi {
+            color: white !important;
+        }
+    }
+
+    .modal-header {
+        color: var(--color) !important;
+    }
+    .btn-close {
+        background-color: var(--color) !important;
+    }
+}

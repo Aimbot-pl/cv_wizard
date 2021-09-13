@@ -1,5 +1,5 @@
 <template>
-    <div class="row px-3 form-section">
+    <div class="row px-3 form-section" id="section_download">
         <div class="text-center">
             <img 
                 src="images/file_success.png" 
@@ -11,7 +11,7 @@
             <p>Trzymamy kciuki!</p>
         </div>
         <div class="col-12 text-center">
-            <button @click="downloadCv" class="btn btn-primary bi bi-download px-5 py-2 rounded-pill">
+            <button @click="download" class="btn btn-primary bi bi-download px-5 py-2 rounded-pill">
                 Pobierz CV
             </button>
         </div>
@@ -25,25 +25,33 @@ import { mapGetters } from 'vuex';
         emits: ['download-cv'],
         computed: {
             ...mapGetters({
-                clientWidth: "clientWidth"
+                clientWidth: "clientWidth",
+                user: "user"
             })
         },
         methods: {
             downloadCv() {
-            const element = document.querySelector('#cv-download');
-            html2pdf().set({
-                margin: 1,
-                filename: 'cv.pdf',
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 2 },
-                jsPDF: {
-                    orientation: 'p',
-                    unit: 'mm',
-                    format: 'a4',
-                }
-            }).from(element)
-            .save();
-        },
+                const element = document.querySelector('#cv-download');
+                element.classList.add('cv-fullview');
+                html2pdf().set({
+                    margin: 1,
+                    filename: 'cv.pdf',
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: {
+                        orientation: 'p',
+                        unit: 'mm',
+                        format: 'a4',
+                    }
+                }).from(element)
+                .save();
+                element.classList.remove('cv-fullview');
+            },
+            download () {
+                localStorage.setItem('user', JSON.stringify(this.user));
+                let route = this.$router.resolve({name: 'CV'});
+                window.open(route.href, '_blank');
+            }
         }
     }
 </script>

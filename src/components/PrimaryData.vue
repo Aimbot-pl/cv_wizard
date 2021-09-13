@@ -184,7 +184,7 @@
                     ref="contact_value"
                     @input="errors.contactValue = null"
                     v-model="formData.contact.contactValue"
-                    :class="[form_text, {'is-invalid': errors.contactValue}]"
+                    :class="[form_text, {'is-invalid': errors.contactValue}, {'is-invalid': errors.contact}]"
                 />
                 <span 
                     v-if="errors.contactValue" 

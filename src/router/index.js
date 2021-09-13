@@ -6,6 +6,11 @@ const routes = [
         name: 'Home',
         alias: '/home',
         component: () => import('../views/Home.vue')
+    },
+    {
+        path: '/cv',
+        name: 'CV',
+        component: () => import('../views/CvDownload.vue')
     }
 ];
 

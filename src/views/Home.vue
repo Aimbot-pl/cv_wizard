@@ -16,7 +16,12 @@
 				>
 					Kreator CV
 				</h1>
-				<button class="btn rounded-circle bi bi-sun position-absolute text-light" style="top: 20px; right:20px; font-size: 1.5rem;"></button>
+				<button 
+					@click="setThemeMode" 
+					class="btn rounded-circle bi position-absolute text-light" 
+					:class="[theme === 'light' ? 'bi-sun' : 'bi-moon']"
+					style="top: 20px; right:20px; font-size: 1.5rem;"
+				></button>
 			</header>
 
             <!-- Header navigation section -->
@@ -109,7 +114,7 @@
 				<!-- Main section of application -->
 				<div
 					class="
-						col-11 col-md-8 col-md-6
+						col-11 col-md-6
 						bg-light
 						p-2 p-md-3
 						control-panels
@@ -529,6 +534,8 @@ export default {
 	name: "Home",
 	data() {
 		return {
+			theme: null,
+			link: null,
 			fix: false,
 			currentMobilePreviewTab: null,
 			mobilePreviewTabs: [
@@ -577,6 +584,14 @@ export default {
 		this.activeColor = this.storeActiveColor;
 		this.getViewportWidth();
 		window.addEventListener("resize", this.getViewportWidth);
+		this.theme = localStorage.getItem('theme') || 'light';
+		let link = document.createElement('link');
+        link.rel = 'stylesheet'; 
+        link.type = 'text/css';
+        link.href = '../../../public/css/dark.css'; 
+		link.id = "dark_mode";
+		this.link = link
+		this.setThemeMode();
 	},
 
 	mounted() {
@@ -771,6 +786,18 @@ export default {
 			this.shownPreviewTip = false;
 			document.querySelector("#cv_page").style.opacity = 1;
 		},
+
+		setThemeMode() {
+			if (this.theme === 'dark') {
+				document.getElementById('dark_mode').disabled = false
+				this.theme = 'light';
+				localStorage.setItem('theme', 'dark');
+			} else {
+				document.getElementById(this.link.id).disabled = true;
+				this.theme = 'dark';
+				localStorage.setItem('theme', 'light');
+			}
+		}
 	},
 };
 </script>
@@ -1019,6 +1046,9 @@ textarea {
 	color: red;
 }
 
+.cv-fullview {
+	width: 900px !important; 
+}
 
 @media screen and (max-width: 991px) {
 	#preview-column {
@@ -1052,130 +1082,5 @@ textarea {
 			display: inline-block;
 		}
 	}
-}
-
-@media (prefers-color-scheme: dark) {
-	.btn {
-		font-weight: 600 !important;
-	}
-
-	:root {
-		--bg-light: var(--bs-gray-800);
-		--bg-dark: rgb(23, 25, 35);
-		--color: white;
-	}
-
-	body {
-		background-color: var(--bg-dark) !important;
-	}
-
-	input {
-		background-color: var(--bg-light) !important;
-		color: var(--color) !important;
-	}
-
-	select {
-		background-color: var(--bg-light) !important;
-		color: var(--color) !important;
-	}
-
-	.invalid-feedback {
-		font-weight: 600 !important;
-	}
-
-	#preview {
-		background-color: var(--bg-light) !important;
-	}
-
-	#paper,
-	#cv_options {
-		background-color: var(--bg-light) !important;
-
-		.list-inline-item-name {
-			color: var(--bs-gray-dark) !important;
-			font-weight: 700;
-		}
-
-		h1,
-		h2,
-		p,
-		label {
-			color: var(--color) !important;
-		}
-
-		.horizontal-list {
-			background-color: var(--bs-secondary) !important;
-		}
-
-		.card {
-			background-color: var(--bs-secondary) !important;
-
-			.btn {
-				color: var(--bs-gray-500) !important;
-			}
-
-			.btn:hover {
-				color: var(--color) !important;
-			}
-
-			.btn:focus {
-				// border-color: var(--bs-ligth) !important;
-				// outline: var(--bs-light) !important;
-				color: var(--color) !important;
-				box-shadow: 0 0 0 0.25rem var(--bs-gray-400);
-			}
-
-			.btn:active {
-				background-color: var(--bs-light) !important;
-				color: var(--bs-secondary) !important;
-			}
-		}
-
-		.modal-content {
-			background-color: var(--bg-light) !important;
-			color: var(--color) !important;
-
-			.bi {
-				color: var(--color) !important;
-			}
-
-			.date-picker {
-				background-color: var(--bg-light) !important;
-				color: var(--color) !important;
-			}
-
-			.btn-close {
-				background-color: var(--color) !important;
-			}
-		}
-
-		textarea {
-			background-color: var(--bs-secondary) !important;
-			color: var(--color) !important;
-		}
-	}
-
-    .modal-content {
-        background-color: var(--bg-light) !important;
-
-        .modal-footer {
-            color: var(--color) !important;
-
-            ul > li > button {
-                color: white !important;
-            }
-
-            .bi {
-                color: white !important;
-            }
-        }
-
-        .modal-header {
-            color: var(--color) !important;
-        }
-        .btn-close {
-            background-color: var(--color) !important;
-        }
-    }
 }
 </style>

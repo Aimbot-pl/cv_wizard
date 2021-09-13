@@ -1,0 +1,139 @@
+.btn {
+  font-weight: 600 !important;
+}
+
+:root {
+  --bg-light: var(--bs-gray-800);
+  --bg-dark: rgb(23, 25, 35);
+  --color: white;
+}
+
+body {
+  background-color: var(--bg-dark) !important;
+}
+
+input {
+  background-color: var(--bg-light) !important;
+  color: var(--color) !important;
+}
+
+select {
+  background-color: var(--bg-light) !important;
+  color: var(--color) !important;
+}
+
+.invalid-feedback {
+  font-weight: 600 !important;
+}
+
+#preview {
+  background-color: var(--bg-light) !important;
+}
+
+#paper,
+#cv_options {
+  background-color: var(--bg-light) !important;
+}
+
+#paper .list-inline-item-name,
+#cv_options .list-inline-item-name {
+  color: var(--bs-gray-dark) !important;
+  font-weight: 700;
+}
+
+#paper h1,
+#paper h2,
+#paper p,
+#paper label,
+#cv_options h1,
+#cv_options h2,
+#cv_options p,
+#cv_options label {
+  color: var(--color) !important;
+}
+
+#paper .horizontal-list,
+#cv_options .horizontal-list {
+  background-color: var(--bs-secondary) !important;
+}
+
+#paper .card,
+#cv_options .card {
+  background-color: var(--bs-secondary) !important;
+}
+
+#paper .card .btn,
+#cv_options .card .btn {
+  color: var(--bs-gray-500) !important;
+}
+
+#paper .card .btn:hover,
+#cv_options .card .btn:hover {
+  color: var(--color) !important;
+}
+
+#paper .card .btn:focus,
+#cv_options .card .btn:focus {
+  color: var(--color) !important;
+  -webkit-box-shadow: 0 0 0 0.25rem var(--bs-gray-400);
+          box-shadow: 0 0 0 0.25rem var(--bs-gray-400);
+}
+
+#paper .card .btn:active,
+#cv_options .card .btn:active {
+  background-color: var(--bs-light) !important;
+  color: var(--bs-secondary) !important;
+}
+
+#paper .modal-content,
+#cv_options .modal-content {
+  background-color: var(--bg-light) !important;
+  color: var(--color) !important;
+}
+
+#paper .modal-content .bi,
+#cv_options .modal-content .bi {
+  color: var(--color) !important;
+}
+
+#paper .modal-content .date-picker,
+#cv_options .modal-content .date-picker {
+  background-color: var(--bg-light) !important;
+  color: var(--color) !important;
+}
+
+#paper .modal-content .btn-close,
+#cv_options .modal-content .btn-close {
+  background-color: var(--color) !important;
+}
+
+#paper textarea,
+#cv_options textarea {
+  background-color: var(--bs-secondary) !important;
+  color: var(--color) !important;
+}
+
+.modal-content {
+  background-color: var(--bg-light) !important;
+}
+
+.modal-content .modal-footer {
+  color: var(--color) !important;
+}
+
+.modal-content .modal-footer ul > li > button {
+  color: white !important;
+}
+
+.modal-content .modal-footer .bi {
+  color: white !important;
+}
+
+.modal-content .modal-header {
+  color: var(--color) !important;
+}
+
+.modal-content .btn-close {
+  background-color: var(--color) !important;
+}
+/*# sourceMappingURL=dark.css.map */
