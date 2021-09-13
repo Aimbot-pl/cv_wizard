@@ -1,0 +1,18 @@
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+@import "../../node_modules/cropperjs/src/index.scss";
+
+$custom-theme-colors: (
+	'gray': #eee,
+	'darkblue': #1825aa,
+	'darkInfo': #4651bb,
+);
+
+@each $key, $value in $custom-theme-colors {
+	.bg-#{$key} {
+		background-color: $value;
+	}
+
+	.text-#{$key} {
+		color: $value;
+	}
+}

@@ -1,18 +1,1181 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+	<transition name="fade" mode="out-in">
+		<div v-if="showCreator">
+
+            <!-- Hidden links -->
+			<ul class="hidden-links">
+				<li>
+					<a id="hidden_nav" href="#creator">Przejdź do kreatora</a>
+				</li>
+				<li><a href="#preview">Przejdź do podglądu</a></li>
+			</ul>
+			<header>
+				<h1
+					id="header_banner"
+					class="bg-primary text-white text-center text-md-left p-4 d-inline-block w-100"
+				>
+					Kreator CV
+				</h1>
+				<button class="btn rounded-circle bi bi-sun position-absolute text-light" style="top: 20px; right:20px; font-size: 1.5rem;"></button>
+			</header>
+
+            <!-- Header navigation section -->
+			<div v-if="clientWidth >= 3">
+				<!-- Header navigation block -->
+				<div
+					id="header_navigation"
+					class="d-flex position-relative justify-content-evenly my-3"
+				>
+					<!-- Progress bar -->
+					<div
+						class="progress position-absolute w-100 bg-transparent"
+						style="z-index: -1; top: 20px"
+					>
+						<div
+							class="progress-bar bg-warning"
+							role="progressbar"
+							:style="{
+								width: 25 + 25 * currentFormTabIndex + '%',
+							}"
+							:aria-valuenow="25 + 25 * currentFormTabIndex"
+							:aira-label="`CV wypełnione w ${
+								25 + 25 * currentFormTabIndex
+							}%`"
+							aria-valuemin="0"
+							aria-valuemax="100"
+						></div>
+					</div>
+					<!-- Header navigation -->
+					<button
+						v-for="nav in navigation"
+						:key="nav.id"
+						@click="changeFormTab(nav.id)"
+						class="
+							text-center
+							w-100
+							bg-transparent
+							border-0
+							header-navigation-button
+						"
+					>
+						<span
+							:class="[
+								buttonClass(nav.id),
+								{
+									'text-primary':
+										nav.id !== currentFormTabIndex,
+								},
+							]"
+							class="
+								btn
+								border border-2
+								rounded-circle
+								text-center
+								p-3
+								text-decoration-none
+							"
+						>
+							<span
+								v-if="isDone(nav.id)"
+								class="bi bi-check-lg p-1"
+							></span>
+							<span v-else class="px-2">
+								{{ nav.id + 1 }}
+							</span>
+						</span>
+						<span
+							class="
+								btn
+								mt-2
+								bg-transparent
+								d-block
+								border-0
+								text-primary
+								w-100
+							"
+							:class="[
+								buttonClass(nav.id),
+								{ 'fw-bold': currentFormTabIndex === nav.id },
+							]"
+						>
+							{{ nav.title }}
+						</span>
+					</button>
+				</div>
+			</div>
+
+			<!-- Main application -->
+			<div id="creator" class="d-flex justify-content-evenly my-4">
+				<!-- Main section of application -->
+				<div
+					class="
+						col-11 col-md-8 col-md-6
+						bg-light
+						p-2 p-md-3
+						control-panels
+					"
+					id="paper"
+				>
+					<component :is="formTabComponent"></component>
+					<p v-if="notLastPage" class="p-3">* Pola obowiązkowe</p>
+
+					<!-- Bottom pagination -->
+					<div
+						v-if="clientWidth >= 3"
+						class="
+							d-flex
+							mt-4
+							pt-4
+							border-top
+							justify-content-evenly
+						"
+					>
+						<button
+							v-if="currentFormTabIndex > 0"
+							@click="changeFormTab(currentFormTabIndex - 1)"
+							class="
+								my-auto
+								border-0
+								btn
+								text-primary
+								bg-transparent
+								bi bi-chevron-left
+							"
+						>
+							Wstecz
+						</button>
+						<a
+							v-if="notLastPage"
+							href="#app"
+							@click="changeFormTab(currentFormTabIndex + 1)"
+							class="btn btn-primary px-5 py-2 rounded-pill"
+							>Dalej</a
+						>
+					</div>
+				</div>
+
+				<!-- Preview -->
+				<div v-if="clientWidth >= 3" class="col" id="preview-column">
+					<div class="w-100 h-100">
+						<div
+							type="button"
+							id="preview"
+							class="position-relative"
+						>
+							<div
+								class="bg-light"
+								data-bs-toggle="modal"
+								data-bs-target="#previewModal"
+								id="preview_tip_area"
+								@mouseleave="hidePreviewTip"
+								@mouseenter="showPreviewTip"
+							>
+								<transition name="fade">
+									<div
+										v-if="shownPreviewTip"
+										id="preview_tip_absolute"
+										class="h-100 w-100 position-absolute"
+									>
+										<div id="preview-tip" class="m-auto">
+											<div class="m-auto text-center">
+												<button
+													class="
+														btn btn-primary
+														bi bi-zoom-in
+														rounded-circle
+													"
+												></button>
+												<p>Powiększ podgląd CV</p>
+											</div>
+										</div>
+									</div>
+								</transition>
+								<CV id="cv_page" class="p-3 bg-light" />
+							</div>
+
+							<!-- CV options -->
+							<div
+								v-show="notLastPage"
+								id="cv_options"
+								class="w-100 bg-light p-3"
+								:class="[
+									fix ? 'position-fixed' : 'position-static',
+								]"
+								:style="[fix ? 'bottom: 0' : '']"
+							>
+								<div
+									class="
+										border
+										border-start-0
+										border-end-0
+										border-bottom-0
+										py-3
+									"
+								>
+									<div class="row">
+										<div class="col-sm-4 col-lg-12 my-auto">
+											<h2>Wybierz kolor</h2>
+										</div>
+										<div class="col-sm-8 col-lg-12 my-auto">
+											<div
+												v-for="color in colors"
+												:key="color"
+												class="
+													d-inline-block
+													preview-button-container
+												"
+											>
+												<button
+													@click="
+														changeActiveColor(color)
+													"
+													class="
+														btn
+														rounded-circle
+														preview-button
+													"
+													:class="[
+														activeColor === color
+															? 'preview-button-active bi bi-check'
+															: 'preview-button',
+													]"
+													:style="{
+														'background-color':
+															color,
+													}"
+												></button>
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-sm-4 col-lg-12 my-auto">
+											<h2>Styl zdjęcia</h2>
+										</div>
+										<div class="col-sm-8 col-lg-12 my-auto">
+											<div
+												class="
+													d-inline-block
+													preview-button-container
+												"
+											>
+												<button
+													@click="
+														setPhotoClass(
+															'rounded-circle'
+														)
+													"
+													:class="[
+														photoClass ===
+														'rounded-circle'
+															? 'preview-button-active bi bi-check'
+															: 'preview-button',
+													]"
+													class="
+														btn btn-primary
+														rounded-circle
+													"
+												></button>
+											</div>
+
+											<div
+												class="
+													d-inline-block
+													preview-button-container
+												"
+											>
+												<button
+													@click="
+														setPhotoClass(
+															'img-thumbnail'
+														)
+													"
+													:class="[
+														photoClass ===
+														'img-thumbnail'
+															? 'preview-button-active bi bi-check'
+															: 'preview-button',
+													]"
+													class="btn btn-primary"
+													style="border-radius: 30%"
+												></button>
+											</div>
+											<div
+												class="
+													d-inline-block
+													preview-button-container
+												"
+											>
+												<button
+													@click="setPhotoClass('')"
+													:class="[
+														photoClass === ''
+															? 'preview-button-active bi bi-check'
+															: 'preview-button',
+													]"
+													class="
+														btn btn-primary
+														rounded-0
+													"
+												></button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Footer -->
+			<footer id="footer" class="py-4 py-md-5 mt-5 text-center text-light">
+				<span class="d-block"
+					>CV generator &copy; 2021 Wszelkie prawa zastrzeżone</span>
+                <a href="#app" class="d-block text-decoration-none text-light"
+                >Powrót na górę</a
+				>
+			</footer>
+
+			<!-- bottom navigation -->
+			<div
+				v-if="clientWidth < 3"
+				id="footer_nav"
+				class="
+					fixed-bottom
+					bg-primary
+					text-light
+					d-flex
+					justify-content-evenly
+				"
+			>
+				<button
+					@click="changeFormTab(currentFormTabIndex - 1)"
+					:class="currentFormTabIndex === 0 ? 'disabled' : ''"
+					class="
+						btn btn-primary
+						rounded-circle
+						p-3
+						my-2
+						text-light
+						bi bi-chevron-left
+					"
+				></button>
+				<div class="my-auto">
+					<ul class="m-0 my-auto p-0">
+						<li
+							v-for="nav in navigation"
+							:key="nav.id"
+							:class="navDotClass(nav.id)"
+							class="nav-dot d-inline-block"
+						></li>
+					</ul>
+				</div>
+				<button
+					@click="changeFormTab(currentFormTabIndex + 1)"
+					:class="currentFormTabIndex === 3 ? 'disabled' : ''"
+					class="
+						btn btn-primary
+						rounded-circle
+						p-3
+						my-2
+						text-light
+						bi bi-chevron-right
+					"
+				></button>
+			</div>
+
+            <!-- TODO fix button to add distance of footer at end of page  -->
+			<!-- Rounded preview button -->
+			<button
+				v-if="clientWidth < 3"
+				id="cv-preview"
+				class="btn btn-info fs-4 rounded-circle bi bi-file-earmark-play"
+				data-bs-toggle="modal"
+				data-bs-target="#previewModal"
+			></button>
+
+			<!-- CV modal -->
+			<div
+				class="modal fade"
+				id="previewModal"
+				tabindex="-1"
+				aria-labelledby="previewModalLabel"
+				aria-hidden="true"
+			>
+				<div class="modal-dialog modal-xl modal-fullscreen-lg-down">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								aria-label="Close"
+							></button>
+						</div>
+						<div id="cv-download" class="modal-body">
+							<CV id="cv_pagee" />
+						</div>
+						<div
+							v-if="clientWidth < 3 && !!mobilePreviewTabs"
+							class="modal-footer d-flex justify-content-between"
+							id="modal_preview_footer"
+						>
+							<div
+								class="d-flex justify-content-between w-100"
+								style="z-index: 3"
+							>
+								<ul class="nav">
+									<li
+										v-for="tab in mobilePreviewTabs"
+										:key="tab.component"
+										class="nav-item"
+									>
+										<button
+											@click="
+												currentMobilePreviewTab =
+													tab.component
+											"
+											class="
+												btn
+												modal-mobile-preview-button
+											"
+											:class="[
+												tab.class,
+												{
+													'modal-mobile-preview-button-active':
+														currentMobilePreviewTab ===
+														tab.component,
+												},
+											]"
+										>
+											<span class="bi d-block"></span>
+											{{ tab.name }}
+										</button>
+									</li>
+								</ul>
+								<transition name="fade">
+									<button
+										v-if="currentMobilePreviewTab"
+										@click="currentMobilePreviewTab = null"
+										class="btn bi bi-x-lg my-auto"
+									></button>
+								</transition>
+							</div>
+							<transition name="fade" appear>
+								<div
+									class="d-block w-100 border-top pt-2"
+									v-if="currentMobilePreviewTab"
+								>
+									<transition
+										name="slide-vertical"
+										mode="out-in"
+									>
+										<component
+											:is="currentMobilePreviewTab"
+										/>
+									</transition>
+								</div>
+							</transition>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Landing page -->
+		<div
+			v-else
+			class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column"
+		>
+			<main class="px-3 m-auto">
+				<h1>Kreator CV</h1>
+				<p class="lead text-justify">
+					Przejdź przez kreator i stwórz CV korzystając z jednego z
+					dostępnych szablonów.
+				</p>
+				<p class="lead">
+					<button
+						@click="toggleCreator"
+						class="
+							btn-forward btn btn-lg btn-secondary
+							fw-bold
+							border-white
+							bg-white
+							text-dark
+							mt-4 mt-ms-5
+						"
+					>
+						Przejdź do kreatora
+					</button>
+				</p>
+			</main>
+		</div>
+	</transition>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+
+import { mapActions, mapGetters } from "vuex";
+import PrimaryData from "../components/PrimaryData.vue";
+import Experience from "../components/Experience.vue";
+import Skills from "../components/Skills.vue";
+import Download from "../components/Download.vue";
+import CV from "../components/CV.vue";
+import MobileSetColor from "../components/MobileSetColor.vue";
+import MobileSetPhoto from "../components/MobileSetPhoto.vue";
 
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
-}
+	name: "Home",
+	data() {
+		return {
+			fix: false,
+			currentMobilePreviewTab: null,
+			mobilePreviewTabs: [
+				{
+					component: "MobileSetPhoto",
+					class: "bi-person-square",
+					name: "Zdjęcie",
+				},
+				{
+					component: "MobileSetColor",
+					class: "bi-palette",
+					name: "Kolor",
+				},
+			],
+			navigation: [
+				{ id: 0, title: "Dane podstawowe", component: "PrimaryData" },
+				{ id: 1, title: "Doświadczenie", component: "Experience" },
+				{ id: 2, title: "Umiejętności", component: "Skills" },
+				{ id: 3, title: "Pobierz CV", component: "Download" },
+			],
+			notLastPage: true,
+			currentFormTab: "PrimaryData",
+			currentFormTabIndex: 0,
+			maxIndex: 0,
+			shownPreviewTip: false,
+			previewMenu: {
+				width: null,
+			},
+		};
+	},
+
+	components: {
+		PrimaryData,
+		Experience,
+		Skills,
+		Download,
+		CV,
+		MobileSetColor,
+		MobileSetPhoto,
+	},
+
+	created() {
+		this.createUser();
+		this.doShowCreator(this.showCreator);
+		this.colors = this.storeColors;
+		this.activeColor = this.storeActiveColor;
+		this.getViewportWidth();
+		window.addEventListener("resize", this.getViewportWidth);
+	},
+
+	mounted() {
+		window.addEventListener("scroll", () => {
+			
+			if (this.clientWidth >= 3) {
+
+                let cvPage = document.querySelector("#cv_page");
+                let cvOptions = document.querySelector("#cv_options");
+                let viewport = document.getElementsByTagName("html")[0];
+                let previewTip = document.querySelector("#preview");
+                let headerHeight =
+                    document.querySelector("#header_banner").clientHeight +
+                    document.querySelector("#header_navigation").clientHeight;
+                if (
+                    headerHeight + cvPage.clientHeight + cvPage.clientHeight >
+                    window.innerHeight
+                ) {
+                    this.fix = true;
+                }
+				this.previewMenu.width =
+					document.querySelector("#cv_page").clientWidth;
+
+				if (
+					cvPage.clientHeight -
+						(window.scrollY - headerHeight) +
+						cvOptions.clientHeight <
+						viewport.clientHeight ||
+					headerHeight +
+						cvPage.clientHeight +
+						cvOptions.clientHeight <
+						viewport.clientHeight
+				) {
+					this.fix = false;
+					previewTip.setAttribute(
+						"style",
+						`height: ${cvPage.clientHeight}px !important`
+					);
+				} else {
+					this.fix = true;
+					let x = () =>
+						headerHeight - window.scrollY <= 0
+							? 0
+							: headerHeight - window.scrollY;
+					previewTip.setAttribute(
+						"style",
+						`height: ${
+							window.innerHeight - x() - cvOptions.clientHeight
+						}px !important`
+					);
+				}
+			}
+		});
+	},
+
+	destroyed() {
+		window.removeEventListener("resize", this.getViewportWidth);
+	},
+
+	watch: {
+		showCreator(val) {
+			this.doShowCreator(val);
+		},
+		currentFormTabIndex(val) {
+			if (val === this.navigation.at(this.navigation.length - 1).id) {
+				this.notLastPage = false;
+			} else {
+				this.notLastPage = true;
+			}
+		},
+	},
+
+	computed: {
+		...mapGetters({
+			user: "user",
+			userExists: "userExists",
+			colors: "colors",
+			activeColor: "activeColor",
+			photoClass: "photoClass",
+			clientWidth: "clientWidth",
+			canGoForward: "canGoForward",
+		}),
+		showCreator() {
+			return this.userExists ? true : false;
+		},
+		formTabComponent() {
+			return this.currentFormTab;
+		},
+		pagePosition() {
+			return window.scrollY;
+		},
+	},
+
+	methods: {
+		...mapActions({
+			createUser: "doCreateUser",
+			setUserExists: "doSetUserExists",
+			changeActiveColor: "doSetActiveColor",
+			setPhotoClass: "doSetPhotoClass",
+			setClientWidth: "doSetClientWidth",
+			setClickedGoForward: "doSetClickedGoForward",
+		}),
+
+		toggleCreator() {
+			this.setUserExists(true);
+			this.createUser();
+		},
+
+		doShowCreator(val) {
+				if (!val) {
+					document.body.classList.value =
+						"d-flex h-100 text-center text-white bg-dark";
+				} else {
+					document.body.classList.value = "bg-gray";
+				}
+		},
+
+		getViewportWidth() {
+			let width = window.innerWidth;
+			let widthSize;
+			if (width < 576) {
+				widthSize = 1;
+			} else if (width >= 576 && width < 768) {
+				widthSize = 2;
+			} else if (width >= 768 && width < 992) {
+				widthSize = 3;
+			} else if (width >= 992 && width < 1200) {
+				widthSize = 4;
+			} else if (width >= 1200 && width < 1400) {
+				widthSize = 5;
+			} else if (width >= 1400) {
+				widthSize = 6;
+			}
+			this.setClientWidth(widthSize);
+		},
+
+		changeFormTab(id) {
+			let letGo = false;
+			this.setClickedGoForward(true);
+			if (
+				id < this.currentFormTabIndex ||
+				(id < this.maxIndex && this.canGoForward)
+			) {
+				letGo = true;
+				this.setClickedGoForward(false);
+			} else if (id >= this.maxIndex && this.canGoForward) {
+				this.maxIndex++;
+				letGo = true;
+				this.setClickedGoForward(false);
+			}
+
+			if (letGo) {
+				this.currentFormTab = this.navigation[id].component;
+				this.currentFormTabIndex = this.navigation[id].id;
+				let appRoot = document.querySelector("#app_root");
+				console.log(appRoot);
+				setTimeout(() => {
+					window.scrollTo(0, 0);
+					appRoot.focus();
+				}, 100);
+			}
+		},
+
+		buttonClass(id) {
+			if (id === this.currentFormTabIndex) {
+				return "btn-primary active fw-bold";
+			} else if (id > this.maxIndex) {
+				return "btn-outline-primary border-primary disabled";
+			} else {
+				return "btn-outline-primary border-primary bg-light";
+			}
+		},
+
+		navDotClass(id) {
+			if (id > this.currentFormTabIndex) {
+				return "bg-darkInfo";
+			} else {
+				return "bg-info";
+			}
+		},
+
+		isDone(id) {
+			return id < this.currentFormTabIndex ? true : false;
+		},
+
+		showPreviewTip() {
+			this.shownPreviewTip = true;
+			document.querySelector("#cv_page").style.opacity = 0.3;
+		},
+
+		hidePreviewTip() {
+			this.shownPreviewTip = false;
+			document.querySelector("#cv_page").style.opacity = 1;
+		},
+	},
+};
 </script>
+
+<style lang="scss">
+html {
+    height: 100% !important;
+}
+
+html,
+body {
+	font-family: "Lato", sans-serif;
+	scroll-behavior: smooth;
+	min-width: 284px;
+}
+
+#footer {
+    background-color: var(--bs-gray-800);
+}
+
+.bg-gray {
+    background-color: var(--bs-gray-500);
+}
+
+.hidden-links {
+	position: absolute;
+	top: -100%;
+	list-style-type: none;
+	margin: 0;
+
+	> li {
+		> a:focus {
+			background-color: #000 !important;
+			text-decoration: none;
+			color: #fff;
+			padding: 5px;
+			position: fixed;
+			top: 0;
+			left: 0;
+			border: 0;
+		}
+	}
+}
+
+.slide-vertical-enter-from {
+	opacity: 0;
+	transform: translateY(100%);
+}
+
+.slide-vertical-enter-to,
+.slide-vertical-leave-from {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.slide-vertical-enter-active,
+.slide-vertical-leave-active {
+	transition: all 0.3s ease;
+}
+
+.slide-vertical-leave-to {
+	opacity: 0;
+	transform: translateY(-100%);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+	scale: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+	opacity: 1;
+	scale: 1;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+	transition: all 0.3s ease;
+}
+
+.list-inline-item-name {
+	color: var(--bs-gray-dark) !important;
+	font-weight: 700;
+}
+
+#preview-tip {
+	top: 50%;
+	position: relative;
+	text-align: center;
+	transform: translateY(-50%);
+	z-index: 5;
+	scroll-behavior: smooth;
+
+	p {
+		font-size: 1rem !important;
+		font-weight: 700;
+	}
+}
+
+#cv_page {
+	transition: all 0.3s ease;
+}
+
+#cv-preview {
+	position: fixed;
+	right: 5%;
+	bottom: calc(74px + 10%);
+	color: white;
+}
+
+#preview {
+	height: 250px;
+
+	.left-panel {
+		h2 {
+			font-size: 1vw;
+			padding-top: 0.5vw !important;
+			padding-bottom: 0.5vw !important;
+			margin: 0.5vw auto !important;
+		}
+
+		ul {
+			margin-bottom: 0.5vw !important;
+		}
+	}
+
+	.col-8 {
+		padding-left: 0.8%;
+
+		h2 {
+			font-size: 1vw;
+		}
+
+		.col-3 {
+			padding-right: 0;
+			padding-top: 0.2vw;
+		}
+	}
+
+	.card {
+		padding: 3%;
+	}
+
+	li,
+	h5,
+	p {
+		font-size: 0.8vw;
+		margin: 0.2vw !important;
+		padding: 0.2vw !important;
+	}
+}
+
+#cv_options {
+	padding: 1rem;
+	h2 {
+		text-transform: uppercase;
+		margin: 1rem 0;
+		font-size: 0.75rem;
+	}
+	li,
+	h5,
+	p {
+		font-size: 1rem;
+	}
+
+	.preview-button-container {
+		width: 3.25rem !important;
+	}
+
+	.preview-button {
+		transition: all 0.3s ease;
+		&:hover {
+			height: 2.5rem;
+			width: 2.5rem;
+		}
+	}
+
+	.preview-button {
+		height: 2rem;
+		width: 2rem;
+	}
+
+	.preview-button-active {
+		height: 2.5rem;
+		width: 2.5rem;
+		color: white;
+	}
+}
+
+#modal_preview_footer {
+	margin: 0;
+	padding: 0.5rem;
+	.modal-mobile-preview-button {
+		transition: all 0.3s ease;
+		border-bottom-width: 2px;
+		border-bottom-style: solid;
+		border-radius: 0;
+
+		&:hover {
+			border-bottom-color: #0dcaf0;
+		}
+
+		&-active,
+		&-active:hover {
+			border-bottom-color: #4651bb;
+		}
+	}
+}
+
+.form-section {
+	padding-top: 0.75rem;
+	&:first-child {
+		padding-top: 0.25rem;
+	}
+}
+
+.form-control {
+	border-radius: 0;
+	&:focus {
+		border-bottom-width: 2px;
+	}
+}
+
+textarea {
+	max-height: 10rem;
+}
+
+.nav-dot {
+	width: 12px;
+	height: 12px;
+	padding: 0;
+	list-style-type: none;
+	border-radius: 50%;
+	border: 1px solid transparent;
+	margin: auto 0.5rem;
+}
+
+.text-small {
+	font-size: 0.75rem !important;
+}
+
+.required::after {
+	content: " *";
+	color: red;
+}
+
+
+@media screen and (max-width: 991px) {
+	#preview-column {
+		max-width: 280px !important;
+
+		#cv_page,
+		#cv_options {
+			width: 280px !important;
+		}
+
+		h2 {
+			display: block;
+		}
+	}
+
+    #footer {
+        margin-bottom: 74px;
+    }
+}
+
+@media screen and (min-width: 992px) {
+	#preview-column {
+		max-width: 380px !important;
+
+		#cv_page,
+		#cv_options {
+			width: 380px !important;
+		}
+
+		h2 {
+			display: inline-block;
+		}
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	.btn {
+		font-weight: 600 !important;
+	}
+
+	:root {
+		--bg-light: var(--bs-gray-800);
+		--bg-dark: rgb(23, 25, 35);
+		--color: white;
+	}
+
+	body {
+		background-color: var(--bg-dark) !important;
+	}
+
+	input {
+		background-color: var(--bg-light) !important;
+		color: var(--color) !important;
+	}
+
+	select {
+		background-color: var(--bg-light) !important;
+		color: var(--color) !important;
+	}
+
+	.invalid-feedback {
+		font-weight: 600 !important;
+	}
+
+	#preview {
+		background-color: var(--bg-light) !important;
+	}
+
+	#paper,
+	#cv_options {
+		background-color: var(--bg-light) !important;
+
+		.list-inline-item-name {
+			color: var(--bs-gray-dark) !important;
+			font-weight: 700;
+		}
+
+		h1,
+		h2,
+		p,
+		label {
+			color: var(--color) !important;
+		}
+
+		.horizontal-list {
+			background-color: var(--bs-secondary) !important;
+		}
+
+		.card {
+			background-color: var(--bs-secondary) !important;
+
+			.btn {
+				color: var(--bs-gray-500) !important;
+			}
+
+			.btn:hover {
+				color: var(--color) !important;
+			}
+
+			.btn:focus {
+				// border-color: var(--bs-ligth) !important;
+				// outline: var(--bs-light) !important;
+				color: var(--color) !important;
+				box-shadow: 0 0 0 0.25rem var(--bs-gray-400);
+			}
+
+			.btn:active {
+				background-color: var(--bs-light) !important;
+				color: var(--bs-secondary) !important;
+			}
+		}
+
+		.modal-content {
+			background-color: var(--bg-light) !important;
+			color: var(--color) !important;
+
+			.bi {
+				color: var(--color) !important;
+			}
+
+			.date-picker {
+				background-color: var(--bg-light) !important;
+				color: var(--color) !important;
+			}
+
+			.btn-close {
+				background-color: var(--color) !important;
+			}
+		}
+
+		textarea {
+			background-color: var(--bs-secondary) !important;
+			color: var(--color) !important;
+		}
+	}
+
+    .modal-content {
+        background-color: var(--bg-light) !important;
+
+        .modal-footer {
+            color: var(--color) !important;
+
+            ul > li > button {
+                color: white !important;
+            }
+
+            .bi {
+                color: white !important;
+            }
+        }
+
+        .modal-header {
+            color: var(--color) !important;
+        }
+        .btn-close {
+            background-color: var(--color) !important;
+        }
+    }
+}
+</style>
