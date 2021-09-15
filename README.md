@@ -1,19 +1,3 @@
-# cv_wizard
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+# Kreator CV
+## Prosty kreator CV pozwalający dostosować wygląd zdjęcia i kolor tła
+<p>Demo dostępne na platformie <a href="https://www.cv-wizard.netlify.app">netlify</a></p>

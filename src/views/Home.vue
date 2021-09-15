@@ -874,7 +874,7 @@ body {
 .header-navigation-button {
 		transition: all .5s ease;
 
-	&:hover, &:focus {
+	&:hover {
 		background-color: rgb(183, 191, 199) !important;
 		border-radius: 10%/50%;
 	}

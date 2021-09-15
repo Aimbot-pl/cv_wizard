@@ -11,7 +11,7 @@
             <p>Trzymamy kciuki!</p>
         </div>
         <div class="col-12 text-center">
-            <button @click="printCv" class="btn btn-primary bi bi-download px-5 py-2 rounded-pill">
+            <button @click="printCv" class="btn btn-primary bi bi-printer px-5 py-2 rounded-pill">
                 Wydrukuj CV
             </button>
         </div>
