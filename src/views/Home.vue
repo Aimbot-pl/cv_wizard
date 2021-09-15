@@ -720,14 +720,16 @@ export default {
 				document.body.classList.value =
 					"d-flex h-100 text-center text-white bg-dark";
 			} else {
+				document.body.classList.value = '';
 				//initial set of footer
-				if (document.querySelector('#app_page').clientHeight < window.innerHeight) {
-					document.querySelector('footer').style.position = 'absolute';
-					document.querySelector('footer').style.width = '100%';
-					document.querySelector('footer').style.bottom = 0;
-				} else {
-					document.querySelector('footer').style.position = 'static';
-					document.body.classList.value = '';
+				if (document.querySelector('#app_page')) {
+					if (document.querySelector('#app_page').clientHeight < window.innerHeight) {
+						document.querySelector('footer').style.position = 'absolute';
+						document.querySelector('footer').style.width = '100%';
+						document.querySelector('footer').style.bottom = 0;
+					} else {
+						document.querySelector('footer').style.position = 'static';
+					}
 				}
 			}
 		},
