@@ -607,13 +607,13 @@ export default {
 	},
 
 	mounted() {
-		window.addEventListener("resize", this.doGetViewportWidth);
+		window.addEventListener("resize", this.getViewportWidth);
 		window.addEventListener("scroll", () => {
 			if (this.clientWidth >= 3) {
-				document.querySelector("#cv_page").style.maxHeight = (document.querySelector('#paper').clientHeight - document.querySelector("#cv_options").clientHeight)+"px";
-				document.querySelector("#cv_page").style.overflow = "hidden";
-
+				
 				let cvPage = document.querySelector("#cv_page");
+				cvPage.style.maxHeight = (document.querySelector('#paper').clientHeight - document.querySelector("#cv_options").clientHeight)+"px";
+				cvPage.style.overflow = "hidden";
 				let cvOptions = document.querySelector("#cv_options");
 				let viewport = document.getElementsByTagName("html")[0];
 				let previewTip = document.querySelector("#preview");
@@ -720,41 +720,11 @@ export default {
 				document.body.classList.value =
 					"d-flex h-100 text-center text-white bg-dark";
 			} else {
-				document.body.classList.value = '';
-				//initial set of footer
-				if (document.querySelector('#app_page')) {
-					if (document.querySelector('#app_page').clientHeight < window.innerHeight) {
-						document.querySelector('footer').style.position = 'absolute';
-						document.querySelector('footer').style.width = '100%';
-						document.querySelector('footer').style.bottom = 0;
-					} else {
-						document.querySelector('footer').style.position = 'static';
-					}
-				}
-			}
-		},
-
-		doGetViewportWidth() {
-			this.getViewportWidth();
-			let appPage = document.querySelector('#app_page')
-			let footer = document.querySelector('footer')
-			let main = document.querySelector('main')
-			if (footer.style.position === 'static') {
-				if (appPage.clientHeight + 48 + 74 < window.innerHeight) {
-					footer.style.position = 'absolute';
-					footer.style.width = '100%';
-					footer.style.bottom = 0;
-				} 
-			} else if (footer.style.position === 'absolute') {
-				if (appPage.clientHeight + 48 + footer.clientHeight + 74 > window.innerHeight) {
-					footer.style.position = 'static';
-				}
+				document.body.classList.value = 'h-100';
 			}
 		},
 
 		getViewportWidth() {
-
-			
 			let width = window.innerWidth;
 			let widthSize;
 			if (width < 576) {
