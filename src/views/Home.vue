@@ -607,14 +607,6 @@ export default {
 	},
 
 	mounted() {
-		//initial set of footer
-		if (document.querySelector('#app_page').clientHeight < window.innerHeight) {
-			document.querySelector('footer').style.position = 'absolute';
-			document.querySelector('footer').style.width = '100%';
-			document.querySelector('footer').style.bottom = 0;
-		} else {
-			document.querySelector('footer').style.position = 'static';
-		}
 		window.addEventListener("resize", this.doGetViewportWidth);
 		window.addEventListener("scroll", () => {
 			if (this.clientWidth >= 3) {
@@ -727,6 +719,15 @@ export default {
 			if (!val) {
 				document.body.classList.value =
 					"d-flex h-100 text-center text-white bg-dark";
+			} else {
+				//initial set of footer
+				if (document.querySelector('#app_page').clientHeight < window.innerHeight) {
+					document.querySelector('footer').style.position = 'absolute';
+					document.querySelector('footer').style.width = '100%';
+					document.querySelector('footer').style.bottom = 0;
+				} else {
+					document.querySelector('footer').style.position = 'static';
+				}
 			}
 		},
 
