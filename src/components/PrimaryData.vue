@@ -1,7 +1,7 @@
 <template>
 
     <!-- Add image -->
-	<div class="row px-3 form-section">
+	<div class="row px-3 form-section" aria-label="Zdjęcie">
         <h2>Dodaj zdjęcie</h2>
         <div class="col-12 mb-4 d-flex justify-content-center">
             <div 
@@ -11,12 +11,14 @@
                 <img 
                     id="photo-placeholder" 
                     :src="localData.photo" 
-                    class="img-thumbnail w-100" 
+                    class="img-thumbnail w-100"
+                    alt="Twoje zdjęcie do CV" 
                 />
                 <button 
                     @click="deleteImage" 
                     class="btn btn-primary rounded-circle fs-4 bi bi-trash" 
                     id="delete_image"
+                    aria-label="Usuń zdjęcie"
                     data-bs-toggle="tooltip"
                     data-bs-placement="right"
                     title="Usuń zdjęcie"
@@ -91,17 +93,19 @@
     <!-- Primary data -->
     <div class="row px-3 form-section">
         <h2>Dane podstawowe</h2>
-        <div class="col-12 mb-4">
+        <div class="col-12 mb-4" aria-label="Imię">
             <label 
                 for="first_name" 
                 class="form-label required"
                 :class="{'is-invalid': errors.firstName}"
+                aria-label="Podaj imię - pole wymagane"
             >Imię</label>
             <input
                 type="text"
                 name="first_name"
                 id="first_name"
                 @blur="checkInput('firstName')"
+                aria-label="Tutaj wpisz imię"
                 v-model="localData.firstName"
                 :class="[form_text, {'is-invalid': errors.firstName}]"
             />
@@ -113,11 +117,12 @@
             </span>
         </div>
 
-        <div class="col-12 mb-4">
+        <div class="col-12 mb-4" aria-label="Nazwisko">
             <label 
                 for="last_name" 
                 class="form-label required"
                 :class="{'is-invalid': errors.lastName}"
+                aria-label="Podaj nazwisko - pole wymagane"
             >Nazwisko</label>
             <input
                 type="text"
@@ -127,6 +132,7 @@
                 ref="last_name"
                 v-model="localData.lastName"
                 :class="[form_text, {'is-invalid': errors.lastName}]"
+                aria-label="Tutaj wpisz nazwisko"
             />
             <span
                 v-if="errors.lastName"
@@ -138,14 +144,15 @@
     </div>
 
     <!-- Contact data -->
-    <div class="col-12 px-3 form-section">
+    <div class="col-12 px-3 form-section" aria-label="Dane kontaktowe">
         <h2 class="required">Dane kontaktowe</h2>
         <div class="row mb-4">
-            <div class="col-12 col-sm-6 mb-4 mb-sm-0">
+            <div class="col-12 col-sm-6 mb-4 mb-sm-0" aria-label="Forma kontaktu">
                 <label 
                     for="contact_form" 
                     class="form-label"
                     :class="{'is-invalid': errors.contactForm}"
+                    aria-label="Forma kontaktu - dodaj co najmniej jedną pozycję"
                 >Forma kontaktu</label
                 >
                 <select
@@ -158,6 +165,7 @@
                     ref="contact_form"
                     v-model="formData.contact.contactForm"
                     :class="[form_select, {'is-invalid': errors.contact}]"
+                    aria-label="Wybierz formę kontaktu"
                 >
                     <option 
                         value="" 
@@ -170,11 +178,12 @@
                     <option value="LinkedIn">LinkedIn</option>
                 </select>
             </div>
-            <div class="col-12 col-sm-6">
+            <div class="col-12 col-sm-6" aria-label="Kontakt">
                 <label 
                     for="contact_value"
                     class="form-label"
                     :class="{'is-invalid': errors.contactValue}"
+                    aria-label="Kontakt"
                 >Kontakt</label>
                 <input
                     disabled
@@ -185,10 +194,12 @@
                     @input="errors.contactValue = null"
                     v-model="formData.contact.contactValue"
                     :class="[form_text, {'is-invalid': errors.contactValue}, {'is-invalid': errors.contact}]"
+                    aria-label="Podaj kontakt"
                 />
                 <span 
                     v-if="errors.contactValue" 
                     class="invalid-feedback d-block"
+                    aria-label="Błąd kontaktu"
                 >
                     {{ errors.contactValue }}
                 </span>
@@ -196,6 +207,7 @@
             <span 
                 v-if="errors.contact" 
                 class="invalid-feedback d-block"
+                aira-label="Błąd danych kontaktowych"
             >
                 {{ errors.contact }}
             </span>
@@ -203,17 +215,20 @@
         <button
             @click="addContact()"
             :class="form_add_position"
+            aria-label="Dodaj formę kontaktu"
         >
             Dodaj pozycję
         </button>
         <div 
             v-if="localData.contact" 
             class="my-2"
+            aria-label="Podane dane kontaktowe"
         >
             <p
                 v-for="contact in localData.contact"
                 :key="contact.contactForm"
                 :class="list_inline"
+                :aria-label="'Forma kontaktu: '+contact.contactForm"
             >
                 <span class="list-inline-item-name">{{ contact.contactForm }}: </span> 
                 <span class="list-inline-item-value">{{ contact.contactValue }}</span>
@@ -223,6 +238,8 @@
                     data-bs-toggle="tooltip" 
                     data-bs-placement="right" 
                     title="Usuń pozycję"
+                    role="button"
+                    :aria-label="'Usuń kontakt: '+contact.contactForm"
                 ></button>
             </p>
         </div>

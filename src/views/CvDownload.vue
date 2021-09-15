@@ -1,5 +1,5 @@
 <template>
-	<div class="cv-page bg-white" id="cv-page">
+	<div class="cv-page bg-white" id="cv_download">
 		<div class="row" style="--bs-gutter-x: 0;">
 			<!-- left sidebar -->
 			<div 
@@ -82,7 +82,7 @@
 							</p>
 						</div>
 						<div class="col-9">
-							<h5>{{ edu.schoolNname }}</h5>
+							<h5>{{ edu.schoolName }}</h5>
 							<p> <span class="fw-bold my-2 d-sm-inline-block my-sm-0">Specjalizacja:</span> {{ edu.specialization }}</p>
 							<p> <span class="fw-bold my-2 d-sm-inline-block my-sm-0">Wykształcenie:</span> {{ edu.educationLevel }}</p>
 							<div v-if="edu.certificate.length">
@@ -141,42 +141,20 @@ import { mapGetters } from "vuex";
 export default {
 	computed: {
 		...mapGetters({
+			user: "user",
 			color: "activeColor",
 			photoClass: "photoClass"
 		}),
-		user() {
-			return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
-		}
 	},
-	mounted() {
-            const element = document.querySelector('#cv-page');
-            element.classList.add('cv-fullview');
-            html2pdf().set({
-                margin: 1,
-                filename: 'cv.pdf',
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 2 },
-                jsPDF: {
-                    orientation: 'p',
-                    unit: 'mm',
-                    format: 'a4',
-                }
-            }).from(element)
-            .save()
-			.then(() => {
-				setTimeout(() => {
-					element.classList.remove('cv-fullview');
-					localStorage.removeItem('user');
-					window.close();
-				}, 100);
-			});
-            
-	}
 
 };
 </script>
 
 <style lang="scss" scoped>
+
+body {
+    background-color: white !important;
+}
 
 #cv-page {
 	width: 780px;
@@ -192,11 +170,6 @@ export default {
 
 #cv {
 	margin: auto;
-}
-
-.left-panel li {
-	text-align: left;
-	margin-left: 1rem;
 }
 
 ul {
@@ -217,6 +190,13 @@ ul {
 
 .left-panel {
 	transition: all 0.3s ease;
+	color: #fff !important;
+    
+    li {
+	    text-align: left;
+	    margin-left: 1rem;
+    }
+    
 	h2 {
 		text-align: center;
 		padding-top: 1rem;

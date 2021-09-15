@@ -3,15 +3,16 @@
         <h2>Wybierz kolor</h2>
         <div>
             <div 
-                v-for="color in colors"
-                :key="color"
+                v-for="c in colors"
+                :key="c.color"
                 class="d-inline-block preview-button-container"
             >
                 <button 
-                    @click="changeActiveColor(color)"
+                    @click="changeActiveColor(c.color)"
                     class="btn rounded-circle preview-button"
-                    :class="[activeColor === color ? 'preview-button-color-active bi bi-check' : 'preview-button-color']"
-                    :style="{'background-color': color}"
+                    :class="[activeColor === c.color ? 'preview-button-color-active bi bi-check' : 'preview-button-color']"
+                    :style="{'background-color': c.color}"
+                    :aria-label="c.label"
                 >
                     
                 </button>
@@ -24,6 +25,9 @@
     import { mapActions, mapGetters } from 'vuex'
     export default {
         name: 'MobileSetColor',
+        mounted() {
+            console.log(this.colors);
+        },
         computed: {
             ...mapGetters({
                 colors: "colors",

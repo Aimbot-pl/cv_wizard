@@ -1,478 +1,500 @@
 <template>
 	<transition name="fade" mode="out-in">
 		<div v-if="showWizard">
+			<CV id="cv_download" style="display: none;"/>
 			<!-- Hidden links -->
-			<ul class="hidden-links" id="hidden_links">
-			<button id="hidden_nav" type="button"></button>
-				<li>
-					<a  href="#wizard">Przejdź do kreatora</a>
-				</li>
-				<li><a href="#preview">Przejdź do podglądu</a></li>
-			</ul>
+			<div id="app_page">
+				<ul class="hidden-links" id="top" aria-label="Ukryte linki">
+					<li>
+						<a  href="#wizard">Przejdź do kreatora</a>
+					</li>
+					<li v-if="clientWidth >= 3"><a href="#preview">Przejdź do podglądu</a></li>
+				</ul>
 
-			<header>
-				<h1
-					id="header_banner"
-					class="
-						bg-primary
-						text-white text-center text-md-left
-						p-4
-						d-inline-block
-						w-100
-					"
-				>
-					Kreator CV
-				</h1>
-				<button
-					@click="setThemeMode"
-					class="btn rounded-circle bi position-absolute text-light shadow"
-					:class="[theme === 'light' ? 'bi-sun' : 'bi-moon']"
-					style="top: 20px; right: 20px; font-size: 1.5rem"
-					data-bs-toggle="tooltip"
-					data-bs-placement="bottom"
-					:title="themeTitle"
-				></button>
-			</header>
-
-			<!-- Header navigation section -->
-			<div v-if="clientWidth >= 3">
-				<!-- Header navigation block -->
-				<div
-					id="header_navigation"
-					class="d-flex position-relative justify-content-evenly my-3 mx-5"
-				>
-					<!-- Header navigation -->
-					<button
-						v-for="nav in navigation"
-						:key="nav.id"
-						@click="changeFormTab(nav.id)"
+				<header role="heading" aria-label="Banner">
+					<h1
+						id="header_banner"
 						class="
-							text-center
+							bg-primary
+							text-white text-center text-md-left
+							p-4
+							d-inline-block
 							w-100
-							bg-transparent
-							border-0
-							header-navigation-button
-							py-3
 						"
 					>
-						<span
-							:class="[
-								buttonClass(nav.id),
-								{
-									'text-primary':
-										nav.id !== currentFormTabIndex,
-								},
-							]"
+						Kreator CV
+					</h1>
+					<button
+						@click="setThemeMode"
+						class="btn rounded-circle bi position-absolute text-light shadow"
+						:class="[theme === 'light' ? 'bi-sun' : 'bi-moon']"
+						style="top: 20px; right: 20px; font-size: 1.5rem"
+						:aria-label="themeTitle"
+						data-bs-toggle="tooltip"
+						data-bs-placement="bottom"
+						:title="'Włącz '+themeTitle"
+					></button>
+				</header>
+
+				<!-- Header navigation section -->
+				<div v-if="clientWidth >= 3" aria-label="Nawigacja">
+					<!-- Header navigation block -->
+					<div
+						id="header_navigation"
+						class="d-flex position-relative justify-content-evenly my-3 mx-5"
+					>
+						<!-- Header navigation -->
+						<button
+							v-for="nav in navigation"
+							:key="nav.id"
+							@click="changeFormTab(nav.id)"
 							class="
-								btn
-								border border-2
-								rounded-circle
 								text-center
-								p-3
-								text-decoration-none
+								w-100
+								bg-transparent
+								border-0
+								header-navigation-button
+								py-3
 							"
 						>
 							<span
-								v-if="isDone(nav.id)"
-								class="bi bi-check-lg p-1"
-							></span>
-							<span v-else class="px-2">
-								{{ nav.id + 1 }}
+								:class="[
+									buttonClass(nav.id),
+									{
+										'text-primary':
+											nav.id !== currentFormTabIndex,
+									},
+								]"
+								class="
+									btn
+									border border-2
+									rounded-circle
+									text-center
+									p-3
+									text-decoration-none
+								"
+							>
+								<span
+									v-if="isDone(nav.id)"
+									class="bi bi-check-lg p-1"
+								></span>
+								<span v-else class="px-2">
+									{{ nav.id + 1 }}
+								</span>
 							</span>
-						</span>
-						<span
-							class="
-								btn
-								mt-2
-								bg-transparent
-								d-block
-								border-0
-								text-primary
-								w-100
-							"
-							:class="[
-								buttonClass(nav.id),
-								{ 'fw-bold': currentFormTabIndex === nav.id },
-							]"
-						>
-							{{ nav.title }}
-						</span>
-					</button>
-				</div>
-			</div>
-
-			<!-- Main application -->
-			<div id="wizard" class="d-flex justify-content-evenly my-4">
-				<!-- Main section of application -->
-				<div
-					class="col-11 col-md-6 bg-light p-2 p-md-3 control-panels"
-					id="paper"
-				>
-					<component :is="formTabComponent"></component>
-					<p v-if="notLastPage" class="p-3">* Pola obowiązkowe</p>
-
-					<!-- Bottom pagination -->
-					<div
-						v-if="clientWidth >= 3"
-						class="
-							d-flex
-							mt-4
-							pt-4
-							border-top
-							justify-content-evenly
-						"
-					>
-						<button
-							v-if="currentFormTabIndex > 0"
-							@click="changeFormTab(currentFormTabIndex - 1)"
-							class="
-								my-auto
-								border-0
-								btn
-								text-primary
-								bg-transparent
-								bi bi-chevron-left
-							"
-						>
-							Wstecz
+							<span
+								class="
+									btn
+									mt-2
+									bg-transparent
+									d-block
+									border-0
+									text-primary
+									w-100
+								"
+								:class="[
+									buttonClass(nav.id),
+									{ 'fw-bold': currentFormTabIndex === nav.id },
+								]"
+							>
+								{{ nav.title }}
+							</span>
 						</button>
-						<a
-							v-if="notLastPage"
-							href="#hidden_nav"
-							@click="changeFormTab(currentFormTabIndex + 1)"
-							class="btn btn-primary px-5 py-2 rounded-pill"
-							>Dalej</a
-						>
 					</div>
 				</div>
 
-				<!-- Preview -->
-				<div v-if="clientWidth >= 3" class="col" id="preview-column">
-					<div class="w-100 h-100">
-						<div
-							type="button"
-							id="preview"
-							class="position-relative"
-						>
-							<div
-								class="bg-light"
-								data-bs-toggle="modal"
-								data-bs-target="#previewModal"
-								id="preview_tip_area"
-								@mouseleave="hidePreviewTip"
-								@mouseenter="showPreviewTip"
-							>
-								<transition name="fade">
-									<div
-										v-if="shownPreviewTip"
-										id="preview_tip_absolute"
-										class="h-100 w-100 position-absolute"
-									>
-										<div id="preview-tip" class="m-auto">
-											<div class="m-auto text-center">
-												<button
-													class="
-														btn btn-primary
-														bi bi-zoom-in
-														rounded-circle
-													"
-												></button>
-												<p>Powiększ podgląd CV</p>
-											</div>
-										</div>
-									</div>
-								</transition>
-								<CV id="cv_page" class="p-3 bg-light" />
-							</div>
+				<!-- Main application -->
+				<main id="wizard" role="main" aria-label="Kreator" class="d-flex justify-content-evenly mt-4 mb-5">
+					<!-- Main section of application -->
+					<section
+						class="col-11 col-md-6 bg-light p-2 p-md-3 control-panels"
+						id="paper"
+						role="form"
+						:aria-label="'Formularz: '+navigation[currentFormTabIndex].title"
+					>
+						<component :is="formTabComponent"></component>
+						<p v-if="notLastPage" aria-label="Pola oznaczone znakiem * są obowiązkowe" class="p-3">* Pola obowiązkowe</p>
 
-							<!-- CV options -->
+						<!-- Bottom pagination -->
+						<div
+							v-if="clientWidth >= 3"
+							class="
+								d-flex
+								mt-4
+								pt-4
+								border-top
+								justify-content-evenly
+							"
+							aria-label="Paginacja"
+						>
+							<a
+								v-if="currentFormTabIndex > 0"
+								href="#app_page"
+								@click="changeFormTab(currentFormTabIndex - 1)"
+								class="
+									my-auto
+									border-0
+									btn
+									text-primary
+									bg-transparent
+									bi bi-chevron-left
+								"
+								aria-label="Przejdź wstecz"
+							>
+								Wstecz
+							</a>
+							<a
+								v-if="notLastPage"
+								href="#"
+								@click="changeFormTab(currentFormTabIndex + 1)"
+								class="btn btn-primary px-5 py-2 rounded-pill"
+								aria-label="Przejdź dalej"
+								>Dalej</a
+							>
+						</div>
+					</section>
+
+					<!-- Preview -->
+					<section 
+						v-if="clientWidth >= 3" 
+						class="col" 
+						id="preview-column"
+						role="aside"
+						aria-label="Podgląd CV"
+					>
+						<div class="w-100 h-100">
 							<div
-								v-show="notLastPage"
-								id="cv_options"
-								class="w-100 bg-light p-3"
-								:class="[
-									fix ? 'position-fixed' : 'position-static',
-								]"
-								:style="[fix ? 'bottom: 0' : '']"
+								type="button"
+								id="preview"
+								class="position-relative"
 							>
 								<div
-									class="
-										border
-										border-start-0
-										border-end-0
-										border-bottom-0
-										py-3
-									"
+									class="bg-light"
+									data-bs-toggle="modal"
+									data-bs-target="#previewModal"
+									id="preview_tip_area"
+									@mouseleave="hidePreviewTip"
+									@mouseenter="showPreviewTip"
 								>
-									<div class="row">
-										<div class="col-sm-4 col-lg-12 my-auto">
-											<h2>Wybierz kolor</h2>
-										</div>
-										<div class="col-sm-8 col-lg-12 my-auto">
-											<div
-												v-for="color in colors"
-												:key="color"
-												class="
-													d-inline-block
-													preview-button-container
-												"
-											>
-												<button
-													@click="
-														changeActiveColor(color)
-													"
-													class="
-														btn
-														rounded-circle
-														preview-button
-													"
-													:class="[
-														activeColor === color
-															? 'preview-button-active bi bi-check'
-															: 'preview-button',
-													]"
-													:style="{
-														'background-color':
-															color,
-													}"
-												></button>
+									<transition name="fade">
+										<div
+											v-if="shownPreviewTip"
+											id="preview_tip_absolute"
+											class="h-100 w-100 position-absolute"
+										>
+											<div id="preview-tip" class="m-auto">
+												<div class="m-auto text-center">
+													<button
+														class="
+															btn btn-primary
+															bi bi-zoom-in
+															rounded-circle
+														"
+													></button>
+													<p>Powiększ podgląd CV</p>
+												</div>
 											</div>
 										</div>
-									</div>
+									</transition>
+									<CV id="cv_page" class="p-3 bg-light" />
+								</div>
 
-									<div class="row">
-										<div class="col-sm-4 col-lg-12 my-auto">
-											<h2>Styl zdjęcia</h2>
+								<!-- CV options -->
+								<div
+									v-show="notLastPage"
+									id="cv_options"
+									class="w-100 bg-light p-3"
+									:class="[
+										fix ? 'position-fixed' : 'position-static',
+									]"
+									:style="[fix ? 'bottom: 0' : '']"
+								>
+									<div
+										class="
+											border
+											border-start-0
+											border-end-0
+											border-bottom-0
+											py-3
+										"
+									>
+										<div class="row">
+											<div class="col-sm-4 col-lg-12 my-auto">
+												<h2>Wybierz kolor</h2>
+											</div>
+											<div class="col-sm-8 col-lg-12 my-auto">
+												<div
+													v-for="c in colors"
+													:key="c.color"
+													class="
+														d-inline-block
+														preview-button-container
+													"
+												>
+													<button
+														@click="
+															changeActiveColor(c.color)
+														"
+														class="
+															btn
+															rounded-circle
+															preview-button
+														"
+														:class="[
+															activeColor === c.color
+																? 'preview-button-active bi bi-check'
+																: 'preview-button',
+														]"
+														:style="{
+															'background-color':
+																c.color,
+														}"
+														:aria-label="c.label"
+													></button>
+												</div>
+											</div>
 										</div>
-										<div class="col-sm-8 col-lg-12 my-auto">
-											<div
-												class="
-													d-inline-block
-													preview-button-container
-												"
-											>
-												<button
-													@click="
-														setPhotoClass(
+
+										<div class="row">
+											<div class="col-sm-4 col-lg-12 my-auto">
+												<h2>Styl zdjęcia</h2>
+											</div>
+											<div class="col-sm-8 col-lg-12 my-auto">
+												<div
+													class="
+														d-inline-block
+														preview-button-container
+													"
+												>
+													<button
+														@click="
+															setPhotoClass(
+																'rounded-circle'
+															)
+														"
+														:class="[
+															photoClass ===
 															'rounded-circle'
-														)
-													"
-													:class="[
-														photoClass ===
-														'rounded-circle'
-															? 'preview-button-active bi bi-check'
-															: 'preview-button',
-													]"
-													class="
-														btn btn-primary
-														rounded-circle
-													"
-												></button>
-											</div>
+																? 'preview-button-active bi bi-check'
+																: 'preview-button',
+														]"
+														class="
+															btn btn-primary
+															rounded-circle
+														"
+													></button>
+												</div>
 
-											<div
-												class="
-													d-inline-block
-													preview-button-container
-												"
-											>
-												<button
-													@click="
-														setPhotoClass(
-															'img-thumbnail'
-														)
-													"
-													:class="[
-														photoClass ===
-														'img-thumbnail'
-															? 'preview-button-active bi bi-check'
-															: 'preview-button',
-													]"
-													class="btn btn-primary"
-													style="border-radius: 30%"
-												></button>
-											</div>
-											<div
-												class="
-													d-inline-block
-													preview-button-container
-												"
-											>
-												<button
-													@click="setPhotoClass('')"
-													:class="[
-														photoClass === ''
-															? 'preview-button-active bi bi-check'
-															: 'preview-button',
-													]"
+												<div
 													class="
-														btn btn-primary
-														rounded-0
+														d-inline-block
+														preview-button-container
 													"
-												></button>
+												>
+													<button
+														@click="
+															setPhotoClass(
+																'img-thumbnail'
+															)
+														"
+														:class="[
+															photoClass ===
+															'img-thumbnail'
+																? 'preview-button-active bi bi-check'
+																: 'preview-button',
+														]"
+														class="btn btn-primary"
+														style="border-radius: 30%"
+													></button>
+												</div>
+												<div
+													class="
+														d-inline-block
+														preview-button-container
+													"
+												>
+													<button
+														@click="setPhotoClass('')"
+														:class="[
+															photoClass === ''
+																? 'preview-button-active bi bi-check'
+																: 'preview-button',
+														]"
+														class="
+															btn btn-primary
+															rounded-0
+														"
+													></button>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+					</section>
+				</main>
+
+				<!-- Footer -->
+				<footer
+					role="footer"
+					id="footer"
+					class="py-4 py-md-5 text-center text-light "
+					aria-label="Stopka"
+				>
+					<span class="d-block" aria-label="Prawa autorskie"
+						>CV generator &copy; 2021 Wszelkie prawa zastrzeżone</span
+					>
+					<a href="#app_page" class="d-block text-decoration-none text-light"
+						>Powrót na górę</a
+					>
+				</footer>
+
+				<!-- bottom navigation -->
+				<nav
+					v-if="clientWidth < 3"
+					id="footer_nav"
+					class="
+						fixed-bottom
+						bg-primary
+						text-light
+						d-flex
+						justify-content-evenly
+					"
+					role="navigation"
+				>
+					<button
+						@click="changeFormTab(currentFormTabIndex - 1)"
+						:class="currentFormTabIndex === 0 ? 'disabled' : ''"
+						class="
+							btn btn-primary
+							rounded-circle
+							p-3
+							my-2
+							text-light
+							bi bi-chevron-left
+						"
+						aria-label="Przejdź wstecz"
+					></button>
+					<div class="my-auto" role="progressbar" :aria-label="'Strona '+(currentFormTabIndex + 1)+' z '+navigation.length">
+						<ul class="m-0 my-auto p-0">
+							<li
+								v-for="nav in navigation"
+								:key="nav.id"
+								:class="navDotClass(nav.id)"
+								class="nav-dot d-inline-block"
+							></li>
+						</ul>
 					</div>
-				</div>
-			</div>
+					<button
+						@click="changeFormTab(currentFormTabIndex + 1)"
+						:class="currentFormTabIndex === 3 ? 'disabled' : ''"
+						class="
+							btn btn-primary
+							rounded-circle
+							p-3
+							my-2
+							text-light
+							bi bi-chevron-right
+						"
+						aria-label="Przejdź dalej"
+					></button>
+				</nav>
 
-			<!-- Footer -->
-			<footer
-				id="footer"
-				class="py-4 py-md-5 mt-5 text-center text-light"
-			>
-				<span class="d-block"
-					>CV generator &copy; 2021 Wszelkie prawa zastrzeżone</span
-				>
-				<a href="#hidden_nav" class="d-block text-decoration-none text-light"
-					>Powrót na górę</a
-				>
-			</footer>
-
-			<!-- bottom navigation -->
-			<div
-				v-if="clientWidth < 3"
-				id="footer_nav"
-				class="
-					fixed-bottom
-					bg-primary
-					text-light
-					d-flex
-					justify-content-evenly
-				"
-			>
+				<!-- Rounded preview button -->
 				<button
-					@click="changeFormTab(currentFormTabIndex - 1)"
-					:class="currentFormTabIndex === 0 ? 'disabled' : ''"
-					class="
-						btn btn-primary
-						rounded-circle
-						p-3
-						my-2
-						text-light
-						bi bi-chevron-left
-					"
+					v-if="clientWidth < 3"
+					id="cv-preview"
+					class="btn btn-info fs-4 rounded-circle bi bi-file-earmark-play"
+					data-bs-toggle="modal"
+					data-bs-target="#previewModal"
+					role="button"
+					aria-label="Pokaż podgląd CV"
 				></button>
-				<div class="my-auto">
-					<ul class="m-0 my-auto p-0">
-						<li
-							v-for="nav in navigation"
-							:key="nav.id"
-							:class="navDotClass(nav.id)"
-							class="nav-dot d-inline-block"
-						></li>
-					</ul>
-				</div>
-				<button
-					@click="changeFormTab(currentFormTabIndex + 1)"
-					:class="currentFormTabIndex === 3 ? 'disabled' : ''"
-					class="
-						btn btn-primary
-						rounded-circle
-						p-3
-						my-2
-						text-light
-						bi bi-chevron-right
-					"
-				></button>
-			</div>
 
-			<!-- TODO fix button to add distance of footer at end of page  -->
-			<!-- Rounded preview button -->
-			<button
-				v-if="clientWidth < 3"
-				id="cv-preview"
-				class="btn btn-info fs-4 rounded-circle bi bi-file-earmark-play"
-				data-bs-toggle="modal"
-				data-bs-target="#previewModal"
-			></button>
-
-			<!-- CV modal -->
-			<div
-				class="modal fade"
-				id="previewModal"
-				tabindex="-1"
-				aria-labelledby="previewModalLabel"
-				aria-hidden="true"
-			>
-				<div class="modal-dialog modal-xl modal-fullscreen-lg-down">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button
-								type="button"
-								class="btn-close"
-								data-bs-dismiss="modal"
-								aria-label="Close"
-							></button>
-						</div>
-						<div id="cv-download" class="modal-body">
-							<CV id="cv_pagee" />
-						</div>
-						<div
-							v-if="clientWidth < 3 && !!mobilePreviewTabs"
-							class="modal-footer d-flex justify-content-between"
-							id="modal_preview_footer"
-						>
-							<div
-								class="d-flex justify-content-between w-100"
-								style="z-index: 3"
-							>
-								<ul class="nav">
-									<li
-										v-for="tab in mobilePreviewTabs"
-										:key="tab.component"
-										class="nav-item"
-									>
-										<button
-											@click="
-												currentMobilePreviewTab =
-													tab.component
-											"
-											class="
-												btn
-												modal-mobile-preview-button
-											"
-											:class="[
-												tab.class,
-												{
-													'modal-mobile-preview-button-active':
-														currentMobilePreviewTab ===
-														tab.component,
-												},
-											]"
-										>
-											<span class="bi d-block"></span>
-											{{ tab.name }}
-										</button>
-									</li>
-								</ul>
-								<transition name="fade">
-									<button
-										v-if="currentMobilePreviewTab"
-										@click="currentMobilePreviewTab = null"
-										class="btn bi bi-x-lg my-auto"
-									></button>
-								</transition>
+				<!-- CV modal -->
+				<div
+					class="modal fade"
+					id="previewModal"
+					tabindex="-1"
+					aria-labelledby="previewModalLabel"
+					aria-hidden="true"
+				>
+					<div class="modal-dialog modal-xl modal-fullscreen-lg-down">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button
+									type="button"
+									class="btn-close"
+									data-bs-dismiss="modal"
+									aria-label="Close"
+								></button>
 							</div>
-							<transition name="fade" appear>
+							<div id="cv-download" class="modal-body">
+								<CV id="cv_pagee" />
+							</div>
+							<div
+								v-if="clientWidth < 3 && !!mobilePreviewTabs"
+								class="modal-footer d-flex justify-content-between"
+								id="modal_preview_footer"
+							>
 								<div
-									class="d-block w-100 border-top pt-2"
-									v-if="currentMobilePreviewTab"
+									class="d-flex justify-content-between w-100"
+									style="z-index: 3"
 								>
-									<transition
-										name="slide-vertical"
-										mode="out-in"
-									>
-										<component
-											:is="currentMobilePreviewTab"
-										/>
+									<ul class="nav">
+										<li
+											v-for="tab in mobilePreviewTabs"
+											:key="tab.component"
+											class="nav-item"
+										>
+											<button
+												@click="
+													currentMobilePreviewTab =
+														tab.component
+												"
+												class="
+													btn
+													modal-mobile-preview-button
+												"
+												:class="[
+													tab.class,
+													{
+														'modal-mobile-preview-button-active':
+															currentMobilePreviewTab ===
+															tab.component,
+													},
+												]"
+											>
+												<span class="bi d-block"></span>
+												{{ tab.name }}
+											</button>
+										</li>
+									</ul>
+									<transition name="fade">
+										<button
+											v-if="currentMobilePreviewTab"
+											@click="currentMobilePreviewTab = null"
+											class="btn bi bi-x-lg my-auto"
+										></button>
 									</transition>
 								</div>
-							</transition>
+								<transition name="fade" appear>
+									<div
+										class="d-block w-100 border-top pt-2"
+										v-if="currentMobilePreviewTab"
+									>
+										<transition
+											name="slide-vertical"
+											mode="out-in"
+										>
+											<component
+												:is="currentMobilePreviewTab"
+											/>
+										</transition>
+									</div>
+								</transition>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -574,7 +596,6 @@ export default {
 		this.colors = this.storeColors;
 		this.activeColor = this.storeActiveColor;
 		this.getViewportWidth();
-		window.addEventListener("resize", this.getViewportWidth);
 		this.theme = localStorage.getItem("theme") || "light";
 		let link = document.createElement("link");
 		link.rel = "stylesheet";
@@ -586,8 +607,15 @@ export default {
 	},
 
 	mounted() {
-
-
+		//initial set of footer
+		if (document.querySelector('#app_page').clientHeight < window.innerHeight) {
+			document.querySelector('footer').style.position = 'absolute';
+			document.querySelector('footer').style.width = '100%';
+			document.querySelector('footer').style.bottom = 0;
+		} else {
+			document.querySelector('footer').style.position = 'static';
+		}
+		window.addEventListener("resize", this.doGetViewportWidth);
 		window.addEventListener("scroll", () => {
 			if (this.clientWidth >= 3) {
 				document.querySelector("#cv_page").style.maxHeight = (document.querySelector('#paper').clientHeight - document.querySelector("#cv_options").clientHeight)+"px";
@@ -704,7 +732,27 @@ export default {
 			}
 		},
 
+		doGetViewportWidth() {
+			this.getViewportWidth();
+			let appPage = document.querySelector('#app_page')
+			let footer = document.querySelector('footer')
+			let main = document.querySelector('main')
+			if (footer.style.position === 'static') {
+				if (appPage.clientHeight + 48 + 74 < window.innerHeight) {
+					footer.style.position = 'absolute';
+					footer.style.width = '100%';
+					footer.style.bottom = 0;
+				} 
+			} else if (footer.style.position === 'absolute') {
+				if (appPage.clientHeight + 48 + footer.clientHeight + 74 > window.innerHeight) {
+					footer.style.position = 'static';
+				}
+			}
+		},
+
 		getViewportWidth() {
+
+			
 			let width = window.innerWidth;
 			let widthSize;
 			if (width < 576) {
@@ -741,10 +789,8 @@ export default {
 			if (letGo) {
 				this.currentFormTab = this.navigation[id].component;
 				this.currentFormTabIndex = this.navigation[id].id;
-				let appRoot = document.querySelector("#hidden_nav");
 				setTimeout(() => {
 					window.scrollTo(0, 0);
-					appRoot.focus();
 				}, 100);
 			}
 		},
@@ -794,6 +840,22 @@ export default {
 				localStorage.setItem("theme", "light");
 			}
 		},
+
+		downloadCv() {
+                const element = document.querySelector('#cv_page');
+                html2pdf().set({
+                    margin: 1,
+                    filename: 'cv.pdf',
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: {
+                        orientation: 'p',
+                        unit: 'mm',
+                        format: 'a4',
+                    }
+                }).from(element)
+                .save();
+            },
 	},
 };
 </script>
@@ -899,6 +961,30 @@ body {
 	color: var(--bs-gray-800) !important;
 	font-weight: 400;
 }
+
+@media print {
+
+	#app_page {
+		display: none !important;
+	}
+
+	#cv_download {
+		display: block !important;
+		height: 100vh !important;
+		padding: 1rem;
+
+		.left-panel {
+			padding-left: .5rem;
+			word-break: normal;
+		}
+
+		.rodo {
+			margin: 1rem;
+		}
+
+	}
+}
+
 
 #preview-tip {
 	top: 50%;
@@ -1065,6 +1151,18 @@ textarea {
 	width: 900px !important;
 }
 
+@media screen and (max-width: 767px) {
+	#footer {
+		margin-bottom: 74px !important;
+	}
+}
+
+@media screen and (min-width: 768px) {
+	#footer {
+		margin-bottom: 0 !important;
+	}
+}
+
 @media screen and (max-width: 991px) {
 	#preview-column {
 		max-width: 280px !important;
@@ -1077,10 +1175,6 @@ textarea {
 		h2 {
 			display: block;
 		}
-	}
-
-	#footer {
-		margin-bottom: 74px;
 	}
 }
 

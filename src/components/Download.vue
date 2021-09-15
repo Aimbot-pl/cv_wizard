@@ -11,8 +11,8 @@
             <p>Trzymamy kciuki!</p>
         </div>
         <div class="col-12 text-center">
-            <button @click="download" class="btn btn-primary bi bi-download px-5 py-2 rounded-pill">
-                Pobierz CV
+            <button @click="printCv" class="btn btn-primary bi bi-download px-5 py-2 rounded-pill">
+                Wydrukuj CV
             </button>
         </div>
     </div>
@@ -22,7 +22,6 @@
 import { mapGetters } from 'vuex';
     export default {
         name: 'Download',
-        emits: ['download-cv'],
         computed: {
             ...mapGetters({
                 clientWidth: "clientWidth",
@@ -30,28 +29,24 @@ import { mapGetters } from 'vuex';
             })
         },
         methods: {
-            downloadCv() {
-                const element = document.querySelector('#cv-download');
-                element.classList.add('cv-fullview');
-                html2pdf().set({
-                    margin: 1,
-                    filename: 'cv.pdf',
-                    image: { type: 'jpeg', quality: 1 },
-                    html2canvas: { scale: 2 },
-                    jsPDF: {
-                        orientation: 'p',
-                        unit: 'mm',
-                        format: 'a4',
-                    }
-                }).from(element)
-                .save();
-                element.classList.remove('cv-fullview');
+            printCv() {
+                window.print();
             },
-            download () {
-                localStorage.setItem('user', JSON.stringify(this.user));
-                let route = this.$router.resolve({name: 'CV'});
-                window.open(route.href, '_blank');
-            }
+            // downloadCv() {
+            //     const element = document.querySelector('#cv_page');
+            //     html2pdf().set({
+            //         margin: 1,
+            //         filename: 'cv.pdf',
+            //         image: { type: 'jpeg', quality: 0.95 },
+            //         html2canvas: { scale: 2 },
+            //         jsPDF: {
+            //             orientation: 'p',
+            //             unit: 'mm',
+            //             format: 'a4',
+            //         }
+            //     }).from(element)
+            //     .save();
+            // },
         }
     }
 </script>

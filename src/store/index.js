@@ -18,9 +18,9 @@ const store = createStore({
             message: null,
             userExists: false,
             colors: [
-                '#212529',
-                '#003f63',
-                '#730702'
+                { color: '#212529', label: 'Ciemne tło' },
+                { color: '#003f63', label: 'Niebieskie tło' },
+                { color: '#730702', label: 'Czerwone tło' }
             ],
             activeColor: '#212529',
             photoClass: 'rounded-circle',
@@ -111,7 +111,7 @@ const store = createStore({
             state.userExists = val
         },
         setActiveColor(state, val) {
-            state.activeColor = val
+            state.activeColor = val;
         },
         setPhotoClass(state, val) {
             state.photoClass = val

@@ -12,6 +12,7 @@
 						class="avatar" 
 						:class="photoClass"
 						:src="user.photo" 
+						alt="Podgląd Twojego zdjęcia do CV"
 					/>
 				</div>
 				<h2 v-if="user" class="px-2">
@@ -82,7 +83,7 @@
 							</p>
 						</div>
 						<div class="col-12 col-sm-9">
-							<h5>{{ edu.schoolNname }}</h5>
+							<h5>{{ edu.schoolName }}</h5>
 							<p> <span class="d-block fw-bold my-2 d-sm-inline-block my-sm-0">Specjalizacja:</span> {{ edu.specialization }}</p>
 							<p> <span class="d-block fw-bold my-2 d-sm-inline-block my-sm-0">Wykształcenie:</span> {{ edu.educationLevel }}</p>
 							<div v-if="edu.certificate.length">
