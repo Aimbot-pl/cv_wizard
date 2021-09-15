@@ -1,6 +1,6 @@
 <template>
 	<transition name="fade" mode="out-in">
-		<div v-if="showWizard">
+		<div v-if="showWizard" id="back_color">
 			<CV id="cv_download" style="display: none;"/>
 			<!-- Hidden links -->
 			<div id="app_page">
