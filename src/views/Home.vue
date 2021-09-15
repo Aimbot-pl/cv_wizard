@@ -727,8 +727,6 @@ export default {
 			if (!val) {
 				document.body.classList.value =
 					"d-flex h-100 text-center text-white bg-dark";
-			} else {
-				document.body.classList.value = "bg-gray";
 			}
 		},
 
@@ -870,6 +868,7 @@ body {
 	font-family: "Lato", sans-serif;
 	scroll-behavior: smooth;
 	min-width: 284px;
+	background-color: var(--bs-gray-300);
 }
 
 .header-navigation-button {
