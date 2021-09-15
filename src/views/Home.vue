@@ -727,6 +727,7 @@ export default {
 					document.querySelector('footer').style.bottom = 0;
 				} else {
 					document.querySelector('footer').style.position = 'static';
+					document.body.classList.value = '';
 				}
 			}
 		},
